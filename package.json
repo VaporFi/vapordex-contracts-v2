@@ -1,25 +1,23 @@
 {
   "name": "vapordex-contracts-v2-monorepo",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
+    "compile": "turbo run compile",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
-  "devDependencies": {
-    "eslint-config-custom": "*",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@manypkg/cli": "latest",
     "prettier": "latest",
     "turbo": "latest"
   },
-  "engines": {
-    "node": ">=14.0.0"
-  },
-  "dependencies": {},
   "packageManager": "yarn@1.22.19"
 }
