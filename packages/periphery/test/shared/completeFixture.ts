@@ -1,6 +1,6 @@
 import { Fixture } from 'ethereum-waffle'
 import { ethers } from 'hardhat'
-import { v3RouterFixture } from './externalFixtures'
+import { v2RouterFixture } from './externalFixtures'
 import { constants } from 'ethers'
 import {
   IWETH9,
@@ -19,7 +19,7 @@ const completeFixture: Fixture<{
   nftDescriptor: NonfungibleTokenPositionDescriptor
   tokens: [TestERC20, TestERC20, TestERC20]
 }> = async ([wallet], provider) => {
-  const { weth9, factory, router } = await v3RouterFixture([wallet], provider)
+  const { weth9, factory, router } = await v2RouterFixture([wallet], provider)
 
   const tokenFactory = await ethers.getContractFactory('TestERC20')
   const tokens: [TestERC20, TestERC20, TestERC20] = [

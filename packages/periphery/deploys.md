@@ -14,7 +14,7 @@ The latest version of `@vapordex/v2-core`, `@uniswap/v3-periphery`, `@uniswap/sw
 | [NonfungibleTokenPositionDescriptor](https://github.com/Uniswap/uniswap-v3-periphery/blob/v1.0.0/contracts/NonfungibleTokenPositionDescriptor.sol)           | `0x91ae842A5Ffd8d12023116943e72A606179294f3`           | `0x644023b316bB65175C347DE903B60a756F6dd554` |
 | [TransparentUpgradeableProxy](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v3.4.1-solc-0.7-2/contracts/proxy/TransparentUpgradeableProxy.sol) | `0xEe6A57eC80ea46401049E92587E52f5Ec1c24785`           | `0x505B43c452AA4443e0a6B84bb37771494633Fde9` |
 | [NonfungiblePositionManager](https://github.com/Uniswap/uniswap-v3-periphery/blob/v1.0.0/contracts/NonfungiblePositionManager.sol)                           | `0xC36442b4a4522E871399CD717aBDD847Ab11FE88`           | `0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A` |
-| [V3Migrator](https://github.com/Uniswap/uniswap-v3-periphery/blob/v1.0.0/contracts/V3Migrator.sol)                                                           | `0xA5644E29708357803b5A882D272c41cC0dF92B34`           | `0x3cFd4d48EDfDCC53D3f173F596f621064614C582` |
+| [V2Migrator](https://github.com/Uniswap/uniswap-v3-periphery/blob/v1.0.0/contracts/V2Migrator.sol)                                                           | `0xA5644E29708357803b5A882D272c41cC0dF92B34`           | `0x3cFd4d48EDfDCC53D3f173F596f621064614C582` |
 
 These addresses are final and were deployed from these npm package versions:
 

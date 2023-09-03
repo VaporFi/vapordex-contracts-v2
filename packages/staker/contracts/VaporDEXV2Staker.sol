@@ -15,7 +15,7 @@ import '@vapordex/v2-core/contracts/interfaces/IERC20Minimal.sol';
 import '@vapordex/v2-periphery/contracts/interfaces/INonfungiblePositionManager.sol';
 import '@vapordex/v2-periphery/contracts/base/Multicall.sol';
 
-/// @title Uniswap V3 canonical staking interface
+/// @title VaporDEX V2 canonical staking interface
 contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
     /// @notice Represents a staking incentive
     struct Incentive {
@@ -75,7 +75,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
     /// @inheritdoc IVaporDEXV2Staker
     mapping(IERC20Minimal => mapping(address => uint256)) public override rewards;
 
-    /// @param _factory the Uniswap V3 factory
+    /// @param _factory the VaporDEX V2 factory
     /// @param _nonfungiblePositionManager the NFT position manager contract address
     /// @param _maxIncentiveStartLeadTime the max duration of an incentive in seconds
     /// @param _maxIncentiveDuration the max amount of seconds into the future the incentive startTime can be set
@@ -141,7 +141,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         emit IncentiveEnded(incentiveId, refund);
     }
 
-    /// @notice Upon receiving a Uniswap V3 ERC721, creates the token deposit setting owner to `from`. Also stakes token
+    /// @notice Upon receiving a VaporDEX V2 ERC721, creates the token deposit setting owner to `from`. Also stakes token
     /// in one or more incentives if properly formatted `data` has a length > 0.
     /// @inheritdoc IERC721Receiver
     function onERC721Received(

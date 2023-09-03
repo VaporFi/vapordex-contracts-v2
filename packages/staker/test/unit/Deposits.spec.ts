@@ -318,7 +318,7 @@ describe('unit/Deposits', () => {
     })
 
     describe('on invalid call', async () => {
-      it('reverts when called by contract other than uniswap v3 nonfungiblePositionManager', async () => {
+      it('reverts when called by contract other than VaporDEX V2 nonfungiblePositionManager', async () => {
         await expect(
           context.staker.connect(lpUser0).onERC721Received(incentiveCreator.address, lpUser0.address, 1, data)
         ).to.be.revertedWith('VaporDEXV2Staker::onERC721Received: not a univ3 nft')

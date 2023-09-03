@@ -1,6 +1,6 @@
 # uniswap-v3-staker
 
-This is the canonical staking contract designed for [Uniswap V3](https://github.com/Uniswap/uniswap-v3-core).
+This is the canonical staking contract designed for [VaporDEX V2](https://github.com/Uniswap/uniswap-v3-core).
 
 ## Deployments
 

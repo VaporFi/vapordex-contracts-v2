@@ -7,7 +7,7 @@
   "nonfungibleTokenPositionDescriptorAddressV1_3_0": "0xAAF7F40BedF4568E60a903A24b10437482118954",
   "descriptorProxyAddress": "0x92CeF5cAE6CF7D468B2009D78173dA095BFE561D",
   "nonfungibleTokenPositionManagerAddress": "0x02cF0fE59d8F69F5a9F0B4ea955a1E7F60c6531e",
-  "v3MigratorAddress": "0xF08f36B24AbC980BA16aeDCF36258CEbC1d2d5D9",
+  "V2MigratorAddress": "0xF08f36B24AbC980BA16aeDCF36258CEbC1d2d5D9",
   "v3StakerAddress": "0x3d23aa29BD389d53853259AFd82C87Cfec18D715",
   "quoterV2Address": "0x94B2D5B066B6B7CF62F110aCa2d1f9c2BFF6C988",
   "swapRouter02": "0x70Ff42B53DeE1069e8e7a6004468ccf3330bbe85"

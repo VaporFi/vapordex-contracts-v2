@@ -1,6 +1,6 @@
 {
   "name": "@vapordex/v2-staker",
-  "description": "Canonical liquidity mining contract for Uniswap V3",
+  "description": "Canonical liquidity mining contract for VaporDEX V2",
   "license": "GPL-3.0-or-later",
   "version": "1.0.2",
   "files": [

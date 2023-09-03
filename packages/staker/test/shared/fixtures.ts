@@ -35,20 +35,20 @@ export const wethFixture: Fixture<WETH9Fixture> = async ([wallet]) => {
   return { weth9 }
 }
 
-const v3CoreFactoryFixture: Fixture<IVaporDEXV2Factory> = async ([wallet]) => {
+const v2CoreFactoryFixture: Fixture<IVaporDEXV2Factory> = async ([wallet]) => {
   return (await waffle.deployContract(wallet, {
     bytecode: VaporDEXV2FactoryJson.bytecode,
     abi: VaporDEXV2FactoryJson.abi,
   })) as unknown as IVaporDEXV2Factory
 }
 
-export const v3RouterFixture: Fixture<{
+export const v2RouterFixture: Fixture<{
   weth9: IWETH9
   factory: IVaporDEXV2Factory
   router: ISwapRouter
 }> = async ([wallet], provider) => {
   const { weth9 } = await wethFixture([wallet], provider)
-  const factory = await v3CoreFactoryFixture([wallet], provider)
+  const factory = await v2CoreFactoryFixture([wallet], provider)
   const router = (await waffle.deployContract(
     wallet,
     {
@@ -77,7 +77,7 @@ type UniswapFactoryFixture = {
 }
 
 export const uniswapFactoryFixture: Fixture<UniswapFactoryFixture> = async (wallets, provider) => {
-  const { weth9, factory, router } = await v3RouterFixture(wallets, provider)
+  const { weth9, factory, router } = await v2RouterFixture(wallets, provider)
   const tokenFactory = await ethers.getContractFactory('TestERC20')
   const tokens = (await Promise.all([
     tokenFactory.deploy(constants.MaxUint256.div(2)), // do not use maxu256 to avoid overflowing

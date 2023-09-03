@@ -37,7 +37,7 @@ your local deployment.
 
 ## Using solidity interfaces
 
-The Uniswap v3 interfaces are available for import into solidity smart contracts
+The VaporDEX V2 interfaces are available for import into solidity smart contracts
 via the npm artifact `@uniswap/v3-core`, e.g.:
 
 ```solidity
