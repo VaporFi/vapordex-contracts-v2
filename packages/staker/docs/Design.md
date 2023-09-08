@@ -1,4 +1,4 @@
-# Uniswap V3 Staker
+# VaporDEX V2 Staker
 
 There is a canonical position staking contract, Staker.
 
@@ -59,7 +59,6 @@ struct EndIncentiveParams {
   uint256 startTime;
   uint256 endTime;
 }
-
 ```
 
 ## Incentives
@@ -176,7 +175,7 @@ To unstake an NFT, you call `unstakeToken`, which takes all the same arguments a
 ### `getRewardInfo`
 
 - It computes `secondsInsideX128` (the total liquidity seconds for which rewards are owed) for a given Stake, by:
-  - using`snapshotCumulativesInside` from the Uniswap v3 core contract to get `secondsPerLiquidityInRangeX128`, and subtracting `secondsPerLiquidityInRangeInitialX128`.
+  - using`snapshotCumulativesInside` from the VaporDEX V2 core contract to get `secondsPerLiquidityInRangeX128`, and subtracting `secondsPerLiquidityInRangeInitialX128`.
   - Multiplying that by `stake.liquidity` to get the total seconds accrued by the liquidity in that period
 - Note that X128 means it's a `UQ32X128`.
 

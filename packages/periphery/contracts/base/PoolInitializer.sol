@@ -7,7 +7,7 @@ import '@vapordex/v2-core/contracts/interfaces/IVaporDEXV2Pool.sol';
 import './PeripheryImmutableState.sol';
 import '../interfaces/IPoolInitializer.sol';
 
-/// @title Creates and initializes V3 Pools
+/// @title Creates and initializes V2 Pools
 abstract contract PoolInitializer is IPoolInitializer, PeripheryImmutableState {
     /// @inheritdoc IPoolInitializer
     function createAndInitializePoolIfNecessary(

@@ -1,9 +1,9 @@
-import V3Migrator from '@vapordex/v2-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
+import V2Migrator from '@vapordex/v2-periphery/artifacts/contracts/V2Migrator.sol/V2Migrator.json'
 import createDeployContractStep from './meta/createDeployContractStep'
 
 export const DEPLOY_V3_MIGRATOR = createDeployContractStep({
-  key: 'v3MigratorAddress',
-  artifact: V3Migrator,
+  key: 'V2MigratorAddress',
+  artifact: V2Migrator,
   computeArguments(state, config) {
     if (state.v3CoreFactoryAddress === undefined) {
       throw new Error('Missing V3 Core Factory')

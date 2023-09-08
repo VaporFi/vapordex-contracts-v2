@@ -7,7 +7,7 @@ import {
   IWETH9,
   MockTimeNonfungiblePositionManager,
   TestERC20,
-  V3Migrator,
+  V2Migrator,
 } from '../typechain'
 import completeFixture from './shared/completeFixture'
 import { v2FactoryFixture } from './shared/externalFixtures'
@@ -20,7 +20,7 @@ import snapshotGasCost from './shared/snapshotGasCost'
 import { sortedTokens } from './shared/tokenSort'
 import { getMaxTick, getMinTick } from './shared/ticks'
 
-describe('V3Migrator', () => {
+describe('V2Migrator', () => {
   let wallet: Wallet
 
   const migratorFixture: Fixture<{
@@ -29,7 +29,7 @@ describe('V3Migrator', () => {
     token: TestERC20
     weth9: IWETH9
     nft: MockTimeNonfungiblePositionManager
-    migrator: V3Migrator
+    migrator: V2Migrator
   }> = async (wallets, provider) => {
     const { factory, tokens, nft, weth9 } = await completeFixture(wallets, provider)
 
@@ -42,8 +42,8 @@ describe('V3Migrator', () => {
 
     // deploy the migrator
     const migrator = (await (
-      await ethers.getContractFactory('V3Migrator')
-    ).deploy(factory.address, weth9.address, nft.address)) as V3Migrator
+      await ethers.getContractFactory('V2Migrator')
+    ).deploy(factory.address, weth9.address, nft.address)) as V2Migrator
 
     return {
       factoryV2,
@@ -60,7 +60,7 @@ describe('V3Migrator', () => {
   let token: TestERC20
   let weth9: IWETH9
   let nft: MockTimeNonfungiblePositionManager
-  let migrator: V3Migrator
+  let migrator: V2Migrator
   let pair: IUniswapV2Pair
 
   let loadFixture: ReturnType<typeof waffle.createFixtureLoader>

@@ -11,11 +11,11 @@ import '@vapordex/v2-core/contracts/interfaces/IERC20Minimal.sol';
 import '@vapordex/v2-periphery/contracts/interfaces/INonfungiblePositionManager.sol';
 import '@vapordex/v2-periphery/contracts/interfaces/IMulticall.sol';
 
-/// @title Uniswap V3 Staker Interface
+/// @title VaporDEX V2 Staker Interface
 /// @notice Allows staking nonfungible liquidity tokens in exchange for reward tokens
 interface IVaporDEXV2Staker is IERC721Receiver, IMulticall {
     /// @param rewardToken The token being distributed as a reward
-    /// @param pool The Uniswap V3 pool
+    /// @param pool The VaporDEX V2 pool
     /// @param startTime The time when the incentive program begins
     /// @param endTime The time when rewards stop accruing
     /// @param refundee The address which receives any remaining reward tokens when the incentive is ended
@@ -27,7 +27,7 @@ interface IVaporDEXV2Staker is IERC721Receiver, IMulticall {
         address refundee;
     }
 
-    /// @notice The Uniswap V3 Factory
+    /// @notice The VaporDEX V2 Factory
     function factory() external view returns (IVaporDEXV2Factory);
 
     /// @notice The nonfungible position manager with which this staking contract is compatible
@@ -88,18 +88,18 @@ interface IVaporDEXV2Staker is IERC721Receiver, IMulticall {
     /// @param to The new owner of the deposit
     function transferDeposit(uint256 tokenId, address to) external;
 
-    /// @notice Withdraws a Uniswap V3 LP token `tokenId` from this contract to the recipient `to`
-    /// @param tokenId The unique identifier of an Uniswap V3 LP token
+    /// @notice Withdraws a VaporDEX V2 LP token `tokenId` from this contract to the recipient `to`
+    /// @param tokenId The unique identifier of an VaporDEX V2 LP token
     /// @param to The address where the LP token will be sent
     /// @param data An optional data array that will be passed along to the `to` address via the NFT safeTransferFrom
     function withdrawToken(uint256 tokenId, address to, bytes memory data) external;
 
-    /// @notice Stakes a Uniswap V3 LP token
+    /// @notice Stakes a VaporDEX V2 LP token
     /// @param key The key of the incentive for which to stake the NFT
     /// @param tokenId The ID of the token to stake
     function stakeToken(IncentiveKey memory key, uint256 tokenId) external;
 
-    /// @notice Unstakes a Uniswap V3 LP token
+    /// @notice Unstakes a VaporDEX V2 LP token
     /// @param key The key of the incentive for which to unstake the NFT
     /// @param tokenId The ID of the token to unstake
     function unstakeToken(IncentiveKey memory key, uint256 tokenId) external;
@@ -126,7 +126,7 @@ interface IVaporDEXV2Staker is IERC721Receiver, IMulticall {
 
     /// @notice Event emitted when a liquidity mining incentive has been created
     /// @param rewardToken The token being distributed as a reward
-    /// @param pool The Uniswap V3 pool
+    /// @param pool The VaporDEX V2 pool
     /// @param startTime The time when the incentive program begins
     /// @param endTime The time when rewards stop accruing
     /// @param refundee The address which receives any remaining reward tokens after the end time
@@ -151,14 +151,14 @@ interface IVaporDEXV2Staker is IERC721Receiver, IMulticall {
     /// @param newOwner The owner after the deposit was transferred
     event DepositTransferred(uint256 indexed tokenId, address indexed oldOwner, address indexed newOwner);
 
-    /// @notice Event emitted when a Uniswap V3 LP token has been staked
-    /// @param tokenId The unique identifier of an Uniswap V3 LP token
+    /// @notice Event emitted when a VaporDEX V2 LP token has been staked
+    /// @param tokenId The unique identifier of an VaporDEX V2 LP token
     /// @param liquidity The amount of liquidity staked
     /// @param incentiveId The incentive in which the token is staking
     event TokenStaked(uint256 indexed tokenId, bytes32 indexed incentiveId, uint128 liquidity);
 
-    /// @notice Event emitted when a Uniswap V3 LP token has been unstaked
-    /// @param tokenId The unique identifier of an Uniswap V3 LP token
+    /// @notice Event emitted when a VaporDEX V2 LP token has been unstaked
+    /// @param tokenId The unique identifier of an VaporDEX V2 LP token
     /// @param incentiveId The incentive in which the token is staking
     event TokenUnstaked(uint256 indexed tokenId, bytes32 indexed incentiveId);
 

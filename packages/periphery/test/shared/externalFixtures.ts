@@ -20,7 +20,7 @@ const wethFixture: Fixture<{ weth9: IWETH9 }> = async ([wallet]) => {
   return { weth9 }
 }
 
-export const v2FactoryFixture: Fixture<{ factory: Contract }> = async ([wallet]) => {
+export const v1FactoryFixture: Fixture<{ factory: Contract }> = async ([wallet]) => {
   const factory = await waffle.deployContract(
     wallet,
     {
@@ -33,20 +33,20 @@ export const v2FactoryFixture: Fixture<{ factory: Contract }> = async ([wallet])
   return { factory }
 }
 
-const v3CoreFactoryFixture: Fixture<IVaporDEXV2Factory> = async ([wallet]) => {
+const v2CoreFactoryFixture: Fixture<IVaporDEXV2Factory> = async ([wallet]) => {
   return (await waffle.deployContract(wallet, {
     bytecode: FACTORY_BYTECODE,
     abi: FACTORY_ABI,
   })) as IVaporDEXV2Factory
 }
 
-export const v3RouterFixture: Fixture<{
+export const v2RouterFixture: Fixture<{
   weth9: IWETH9
   factory: IVaporDEXV2Factory
   router: MockTimeSwapRouter
 }> = async ([wallet], provider) => {
   const { weth9 } = await wethFixture([wallet], provider)
-  const factory = await v3CoreFactoryFixture([wallet], provider)
+  const factory = await v2CoreFactoryFixture([wallet], provider)
 
   const router = (await (
     await ethers.getContractFactory('MockTimeSwapRouter')
