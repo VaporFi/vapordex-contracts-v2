@@ -1,7 +1,7 @@
-import VaporDEXV2Factory from '@vapordex/v2-core/artifacts/contracts/VaporDEXV2Factory.sol/VaporDEXV2Factory.json'
+import UniswapV3Factory from '@uniswap/v3-core/artifacts/contracts/UniswapV3Factory.sol/UniswapV3Factory.json'
 import createDeployContractStep from './meta/createDeployContractStep'
 
 export const DEPLOY_V3_CORE_FACTORY = createDeployContractStep({
   key: 'v3CoreFactoryAddress',
-  artifact: VaporDEXV2Factory,
+  artifact: UniswapV3Factory,
 })

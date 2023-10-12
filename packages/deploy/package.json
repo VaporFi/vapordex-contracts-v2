@@ -1,7 +1,7 @@
 {
-  "name": "@vapordex/deploy-v2",
+  "name": "@uniswap/deploy-v3",
   "version": "1.0.4",
-  "description": "Deploy VaporDEX V2 smart contracts",
+  "description": "Deploy Uniswap V3 smart contracts",
   "bin": "dist/index.js",
   "publishConfig": {
     "access": "restricted"
@@ -21,7 +21,6 @@
   "engines": {
     "node": ">=12.18.3"
   },
-  "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@ethersproject/abstract-signer": "^5.5.0",
     "@ethersproject/address": "^5.5.0",
@@ -36,9 +35,9 @@
     "@types/node": "^14.6.3",
     "@uniswap/sdk-core": "^1.0.8",
     "@uniswap/swap-router-contracts": "1.1.0",
-    "@vapordex/v2-core": "*",
-    "@vapordex/v2-periphery": "*",
-    "@vapordex/v2-staker": "*",
+    "@uniswap/v3-core": "1.0.0",
+    "@uniswap/v3-periphery": "1.1.1",
+    "@uniswap/v3-staker": "1.0.2",
     "@vercel/ncc": "^0.33.1",
     "chai": "^4.2.0",
     "commander": "^6.1.0",

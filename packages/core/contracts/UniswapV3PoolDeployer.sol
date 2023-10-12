@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity =0.7.6;
 
-import './interfaces/IVaporDEXV2PoolDeployer.sol';
+import './interfaces/IUniswapV3PoolDeployer.sol';
 
-import './VaporDEXV2Pool.sol';
+import './UniswapV3Pool.sol';
 
-contract VaporDEXV2PoolDeployer is IVaporDEXV2PoolDeployer {
+contract UniswapV3PoolDeployer is IUniswapV3PoolDeployer {
     struct Parameters {
         address factory;
         address token0;
@@ -14,12 +14,12 @@ contract VaporDEXV2PoolDeployer is IVaporDEXV2PoolDeployer {
         int24 tickSpacing;
     }
 
-    /// @inheritdoc IVaporDEXV2PoolDeployer
+    /// @inheritdoc IUniswapV3PoolDeployer
     Parameters public override parameters;
 
     /// @dev Deploys a pool with the given parameters by transiently setting the parameters storage slot and then
     /// clearing it after deploying the pool.
-    /// @param factory The contract address of the VaporDEX V2 factory
+    /// @param factory The contract address of the Uniswap V3 factory
     /// @param token0 The first token of the pool by address sort order
     /// @param token1 The second token of the pool by address sort order
     /// @param fee The fee collected upon every swap in the pool, denominated in hundredths of a bip
@@ -32,7 +32,7 @@ contract VaporDEXV2PoolDeployer is IVaporDEXV2PoolDeployer {
         int24 tickSpacing
     ) internal returns (address pool) {
         parameters = Parameters({factory: factory, token0: token0, token1: token1, fee: fee, tickSpacing: tickSpacing});
-        pool = address(new VaporDEXV2Pool{salt: keccak256(abi.encode(token0, token1, fee))}());
+        pool = address(new UniswapV3Pool{salt: keccak256(abi.encode(token0, token1, fee))}());
         delete parameters;
     }
 }

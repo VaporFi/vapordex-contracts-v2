@@ -5,17 +5,22 @@ import '../libraries/SafeCast.sol';
 import '../libraries/TickMath.sol';
 
 import '../interfaces/IERC20Minimal.sol';
-import '../interfaces/callback/IVaporDEXV2SwapCallback.sol';
-import '../interfaces/IVaporDEXV2Pool.sol';
+import '../interfaces/callback/IUniswapV3SwapCallback.sol';
+import '../interfaces/IUniswapV3Pool.sol';
 
-contract TestVaporDEXV2Router is IVaporDEXV2SwapCallback {
+contract TestUniswapV3Router is IUniswapV3SwapCallback {
     using SafeCast for uint256;
 
     // flash swaps for an exact amount of token0 in the output pool
-    function swapForExact0Multi(address recipient, address poolInput, address poolOutput, uint256 amount0Out) external {
+    function swapForExact0Multi(
+        address recipient,
+        address poolInput,
+        address poolOutput,
+        uint256 amount0Out
+    ) external {
         address[] memory pools = new address[](1);
         pools[0] = poolInput;
-        IVaporDEXV2Pool(poolOutput).swap(
+        IUniswapV3Pool(poolOutput).swap(
             recipient,
             false,
             -amount0Out.toInt256(),
@@ -25,10 +30,15 @@ contract TestVaporDEXV2Router is IVaporDEXV2SwapCallback {
     }
 
     // flash swaps for an exact amount of token1 in the output pool
-    function swapForExact1Multi(address recipient, address poolInput, address poolOutput, uint256 amount1Out) external {
+    function swapForExact1Multi(
+        address recipient,
+        address poolInput,
+        address poolOutput,
+        uint256 amount1Out
+    ) external {
         address[] memory pools = new address[](1);
         pools[0] = poolInput;
-        IVaporDEXV2Pool(poolOutput).swap(
+        IUniswapV3Pool(poolOutput).swap(
             recipient,
             true,
             -amount1Out.toInt256(),
@@ -39,20 +49,23 @@ contract TestVaporDEXV2Router is IVaporDEXV2SwapCallback {
 
     event SwapCallback(int256 amount0Delta, int256 amount1Delta);
 
-    function VaporDEXV2SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) public override {
+    function uniswapV3SwapCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes calldata data
+    ) public override {
         emit SwapCallback(amount0Delta, amount1Delta);
 
         (address[] memory pools, address payer) = abi.decode(data, (address[], address));
 
         if (pools.length == 1) {
             // get the address and amount of the token that we need to pay
-            address tokenToBePaid = amount0Delta > 0
-                ? IVaporDEXV2Pool(msg.sender).token0()
-                : IVaporDEXV2Pool(msg.sender).token1();
+            address tokenToBePaid =
+                amount0Delta > 0 ? IUniswapV3Pool(msg.sender).token0() : IUniswapV3Pool(msg.sender).token1();
             int256 amountToBePaid = amount0Delta > 0 ? amount0Delta : amount1Delta;
 
-            bool zeroForOne = tokenToBePaid == IVaporDEXV2Pool(pools[0]).token1();
-            IVaporDEXV2Pool(pools[0]).swap(
+            bool zeroForOne = tokenToBePaid == IUniswapV3Pool(pools[0]).token1();
+            IUniswapV3Pool(pools[0]).swap(
                 msg.sender,
                 zeroForOne,
                 -amountToBePaid,
@@ -61,13 +74,13 @@ contract TestVaporDEXV2Router is IVaporDEXV2SwapCallback {
             );
         } else {
             if (amount0Delta > 0) {
-                IERC20Minimal(IVaporDEXV2Pool(msg.sender).token0()).transferFrom(
+                IERC20Minimal(IUniswapV3Pool(msg.sender).token0()).transferFrom(
                     payer,
                     msg.sender,
                     uint256(amount0Delta)
                 );
             } else {
-                IERC20Minimal(IVaporDEXV2Pool(msg.sender).token1()).transferFrom(
+                IERC20Minimal(IUniswapV3Pool(msg.sender).token1()).transferFrom(
                     payer,
                     msg.sender,
                     uint256(amount1Delta)

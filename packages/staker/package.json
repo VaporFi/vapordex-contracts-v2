@@ -1,5 +1,5 @@
 {
-  "name": "@vapordex/v2-staker",
+  "name": "@uniswap/v3-staker",
   "description": "Canonical liquidity mining contract for VaporDEX V2",
   "license": "GPL-3.0-or-later",
   "version": "1.0.2",
@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "3.4.1-solc-0.7-2",
-    "@vapordex/v2-core": "*",
-    "@vapordex/v2-periphery": "*"
+    "@uniswap/v3-core": "*",
+    "@uniswap/v3-periphery": "*"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",

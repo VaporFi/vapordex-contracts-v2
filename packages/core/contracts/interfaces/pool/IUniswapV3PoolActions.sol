@@ -3,14 +3,14 @@ pragma solidity >=0.5.0;
 
 /// @title Permissionless pool actions
 /// @notice Contains pool methods that can be called by anyone
-interface IVaporDEXV2PoolActions {
+interface IUniswapV3PoolActions {
     /// @notice Sets the initial price for the pool
     /// @dev Price is represented as a sqrt(amountToken1/amountToken0) Q64.96 value
     /// @param sqrtPriceX96 the initial sqrt price of the pool as a Q64.96
     function initialize(uint160 sqrtPriceX96) external;
 
     /// @notice Adds liquidity for the given recipient/tickLower/tickUpper position
-    /// @dev The caller of this method receives a callback in the form of IVaporDEXV2MintCallback#VaporDEXV2MintCallback
+    /// @dev The caller of this method receives a callback in the form of IUniswapV3MintCallback#uniswapV3MintCallback
     /// in which they must pay any token0 or token1 owed for the liquidity. The amount of token0/token1 due depends
     /// on tickLower, tickUpper, the amount of liquidity, and the current price.
     /// @param recipient The address for which the liquidity will be created
@@ -56,10 +56,14 @@ interface IVaporDEXV2PoolActions {
     /// @param amount How much liquidity to burn
     /// @return amount0 The amount of token0 sent to the recipient
     /// @return amount1 The amount of token1 sent to the recipient
-    function burn(int24 tickLower, int24 tickUpper, uint128 amount) external returns (uint256 amount0, uint256 amount1);
+    function burn(
+        int24 tickLower,
+        int24 tickUpper,
+        uint128 amount
+    ) external returns (uint256 amount0, uint256 amount1);
 
     /// @notice Swap token0 for token1, or token1 for token0
-    /// @dev The caller of this method receives a callback in the form of IVaporDEXV2SwapCallback#VaporDEXV2SwapCallback
+    /// @dev The caller of this method receives a callback in the form of IUniswapV3SwapCallback#uniswapV3SwapCallback
     /// @param recipient The address to receive the output of the swap
     /// @param zeroForOne The direction of the swap, true for token0 to token1, false for token1 to token0
     /// @param amountSpecified The amount of the swap, which implicitly configures the swap as exact input (positive), or exact output (negative)
@@ -77,14 +81,19 @@ interface IVaporDEXV2PoolActions {
     ) external returns (int256 amount0, int256 amount1);
 
     /// @notice Receive token0 and/or token1 and pay it back, plus a fee, in the callback
-    /// @dev The caller of this method receives a callback in the form of IVaporDEXV2FlashCallback#VaporDEXV2FlashCallback
+    /// @dev The caller of this method receives a callback in the form of IUniswapV3FlashCallback#uniswapV3FlashCallback
     /// @dev Can be used to donate underlying tokens pro-rata to currently in-range liquidity providers by calling
     /// with 0 amount{0,1} and sending the donation amount(s) from the callback
     /// @param recipient The address which will receive the token0 and token1 amounts
     /// @param amount0 The amount of token0 to send
     /// @param amount1 The amount of token1 to send
     /// @param data Any data to be passed through to the callback
-    function flash(address recipient, uint256 amount0, uint256 amount1, bytes calldata data) external;
+    function flash(
+        address recipient,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external;
 
     /// @notice Increase the maximum number of price and liquidity observations that this pool will store
     /// @dev This method is no-op if the pool already has an observationCardinalityNext greater than or equal to
