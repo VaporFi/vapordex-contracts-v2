@@ -1,7 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
-
-import addresses from "../test/addresses.json";
+import addresses from "../constants/addresses.json";
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, network } = hre;
@@ -22,11 +21,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const contractName = "UniswapV3StaticQuoter";
   let factory;
   switch (network.name) {
-    case "avalanche":
-      factory = addresses.avalanche.protocols.uniswapV3.factory;
-      break;
-    case "base":
-      factory = addresses.base.protocols.uniswapV3.factory;
+    case "fuji":
+      factory = addresses.fuji.protocols.vapordex.factory;
       break;
     default:
       factory = addresses.mainnet.protocols.uniswapV3.factory;
