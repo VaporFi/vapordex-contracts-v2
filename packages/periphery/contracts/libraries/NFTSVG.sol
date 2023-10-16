@@ -2,7 +2,7 @@
 pragma solidity >=0.7.6;
 
 import '@openzeppelin/contracts/utils/Strings.sol';
-import '@vapordex/v2-core/contracts/libraries/BitMath.sol';
+import '@uniswap/v3-core/contracts/libraries/BitMath.sol';
 import 'base64-sol/base64.sol';
 
 /// @title NFTSVG
@@ -241,7 +241,11 @@ library NFTSVG {
         );
     }
 
-    function getCurve(int24 tickLower, int24 tickUpper, int24 tickSpacing) internal pure returns (string memory curve) {
+    function getCurve(
+        int24 tickLower,
+        int24 tickUpper,
+        int24 tickSpacing
+    ) internal pure returns (string memory curve) {
         int24 tickRange = (tickUpper - tickLower) / tickSpacing;
         if (tickRange <= 4) {
             curve = curve1;

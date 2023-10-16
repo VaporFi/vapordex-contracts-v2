@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity =0.7.6;
 
-import '@vapordex/v2-core/contracts/libraries/FullMath.sol';
+import '@uniswap/v3-core/contracts/libraries/FullMath.sol';
 import '@openzeppelin/contracts/math/Math.sol';
 
 /// @title Math for computing rewards
@@ -34,8 +34,8 @@ library RewardMath {
         // this operation is safe, as the difference cannot be greater than 1/stake.liquidity
         secondsInsideX128 = (secondsPerLiquidityInsideX128 - secondsPerLiquidityInsideInitialX128) * liquidity;
 
-        uint256 totalSecondsUnclaimedX128 = ((Math.max(endTime, currentTime) - startTime) << 128) -
-            totalSecondsClaimedX128;
+        uint256 totalSecondsUnclaimedX128 =
+            ((Math.max(endTime, currentTime) - startTime) << 128) - totalSecondsClaimedX128;
 
         reward = FullMath.mulDiv(totalRewardUnclaimed, secondsInsideX128, totalSecondsUnclaimedX128);
     }

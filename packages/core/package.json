@@ -1,5 +1,5 @@
 {
-  "name": "@vapordex/v2-core",
+  "name": "@uniswap/v3-core",
   "description": "Core smart contracts of Uniswap V2",
   "license": "BUSL-1.1",
   "publishConfig": {
