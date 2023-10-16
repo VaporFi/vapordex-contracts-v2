@@ -24,6 +24,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     case "fuji":
       factory = addresses.fuji.protocols.vapordex.factory;
       break;
+    case "avalanche": {
+      factory = addresses.avalanche.protocols.vapordexV2.factory;
+    }
     default:
       factory = addresses.mainnet.protocols.uniswapV3.factory;
       break;
