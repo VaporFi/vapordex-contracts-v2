@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity =0.7.6;
 
-import './interfaces/IVaporDEXV2Pool.sol';
+import './interfaces/IUniswapV3Pool.sol';
 
 import './NoDelegateCall.sol';
 
@@ -20,14 +20,14 @@ import './libraries/LiquidityMath.sol';
 import './libraries/SqrtPriceMath.sol';
 import './libraries/SwapMath.sol';
 
-import './interfaces/IVaporDEXV2PoolDeployer.sol';
-import './interfaces/IVaporDEXV2Factory.sol';
+import './interfaces/IUniswapV3PoolDeployer.sol';
+import './interfaces/IUniswapV3Factory.sol';
 import './interfaces/IERC20Minimal.sol';
-import './interfaces/callback/IVaporDEXV2MintCallback.sol';
-import './interfaces/callback/IVaporDEXV2SwapCallback.sol';
-import './interfaces/callback/IVaporDEXV2FlashCallback.sol';
+import './interfaces/callback/IUniswapV3MintCallback.sol';
+import './interfaces/callback/IUniswapV3SwapCallback.sol';
+import './interfaces/callback/IUniswapV3FlashCallback.sol';
 
-contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
+contract UniswapV3Pool is IUniswapV3Pool, NoDelegateCall {
     using LowGasSafeMath for uint256;
     using LowGasSafeMath for int256;
     using SafeCast for uint256;
@@ -38,19 +38,19 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
     using Position for Position.Info;
     using Oracle for Oracle.Observation[65535];
 
-    /// @inheritdoc IVaporDEXV2PoolImmutables
+    /// @inheritdoc IUniswapV3PoolImmutables
     address public immutable override factory;
-    /// @inheritdoc IVaporDEXV2PoolImmutables
+    /// @inheritdoc IUniswapV3PoolImmutables
     address public immutable override token0;
-    /// @inheritdoc IVaporDEXV2PoolImmutables
+    /// @inheritdoc IUniswapV3PoolImmutables
     address public immutable override token1;
-    /// @inheritdoc IVaporDEXV2PoolImmutables
+    /// @inheritdoc IUniswapV3PoolImmutables
     uint24 public immutable override fee;
 
-    /// @inheritdoc IVaporDEXV2PoolImmutables
+    /// @inheritdoc IUniswapV3PoolImmutables
     int24 public immutable override tickSpacing;
 
-    /// @inheritdoc IVaporDEXV2PoolImmutables
+    /// @inheritdoc IUniswapV3PoolImmutables
     uint128 public immutable override maxLiquidityPerTick;
 
     struct Slot0 {
@@ -70,12 +70,12 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         // whether the pool is locked
         bool unlocked;
     }
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     Slot0 public override slot0;
 
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     uint256 public override feeGrowthGlobal0X128;
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     uint256 public override feeGrowthGlobal1X128;
 
     // accumulated protocol fees in token0/token1 units
@@ -83,19 +83,19 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         uint128 token0;
         uint128 token1;
     }
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     ProtocolFees public override protocolFees;
 
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     uint128 public override liquidity;
 
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     mapping(int24 => Tick.Info) public override ticks;
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     mapping(int16 => uint256) public override tickBitmap;
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     mapping(bytes32 => Position.Info) public override positions;
-    /// @inheritdoc IVaporDEXV2PoolState
+    /// @inheritdoc IUniswapV3PoolState
     Oracle.Observation[65535] public override observations;
 
     /// @dev Mutually exclusive reentrancy protection into the pool to/from a method. This method also prevents entrance
@@ -108,15 +108,15 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         slot0.unlocked = true;
     }
 
-    /// @dev Prevents calling a function from anyone except the address returned by IVaporDEXV2Factory#owner()
+    /// @dev Prevents calling a function from anyone except the address returned by IUniswapV3Factory#owner()
     modifier onlyFactoryOwner() {
-        require(msg.sender == IVaporDEXV2Factory(factory).owner());
+        require(msg.sender == IUniswapV3Factory(factory).owner());
         _;
     }
 
     constructor() {
         int24 _tickSpacing;
-        (factory, token0, token1, fee, _tickSpacing) = IVaporDEXV2PoolDeployer(msg.sender).parameters();
+        (factory, token0, token1, fee, _tickSpacing) = IUniswapV3PoolDeployer(msg.sender).parameters();
         tickSpacing = _tickSpacing;
 
         maxLiquidityPerTick = Tick.tickSpacingToMaxLiquidityPerTick(_tickSpacing);
@@ -138,9 +138,8 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
     /// @dev This function is gas optimized to avoid a redundant extcodesize check in addition to the returndatasize
     /// check
     function balance0() private view returns (uint256) {
-        (bool success, bytes memory data) = token0.staticcall(
-            abi.encodeWithSelector(IERC20Minimal.balanceOf.selector, address(this))
-        );
+        (bool success, bytes memory data) =
+            token0.staticcall(abi.encodeWithSelector(IERC20Minimal.balanceOf.selector, address(this)));
         require(success && data.length >= 32);
         return abi.decode(data, (uint256));
     }
@@ -149,23 +148,23 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
     /// @dev This function is gas optimized to avoid a redundant extcodesize check in addition to the returndatasize
     /// check
     function balance1() private view returns (uint256) {
-        (bool success, bytes memory data) = token1.staticcall(
-            abi.encodeWithSelector(IERC20Minimal.balanceOf.selector, address(this))
-        );
+        (bool success, bytes memory data) =
+            token1.staticcall(abi.encodeWithSelector(IERC20Minimal.balanceOf.selector, address(this)));
         require(success && data.length >= 32);
         return abi.decode(data, (uint256));
     }
 
-    /// @inheritdoc IVaporDEXV2PoolDerivedState
-    function snapshotCumulativesInside(
-        int24 tickLower,
-        int24 tickUpper
-    )
+    /// @inheritdoc IUniswapV3PoolDerivedState
+    function snapshotCumulativesInside(int24 tickLower, int24 tickUpper)
         external
         view
         override
         noDelegateCall
-        returns (int56 tickCumulativeInside, uint160 secondsPerLiquidityInsideX128, uint32 secondsInside)
+        returns (
+            int56 tickCumulativeInside,
+            uint160 secondsPerLiquidityInsideX128,
+            uint32 secondsInside
+        )
     {
         checkTicks(tickLower, tickUpper);
 
@@ -208,14 +207,15 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
             );
         } else if (_slot0.tick < tickUpper) {
             uint32 time = _blockTimestamp();
-            (int56 tickCumulative, uint160 secondsPerLiquidityCumulativeX128) = observations.observeSingle(
-                time,
-                0,
-                _slot0.tick,
-                _slot0.observationIndex,
-                liquidity,
-                _slot0.observationCardinality
-            );
+            (int56 tickCumulative, uint160 secondsPerLiquidityCumulativeX128) =
+                observations.observeSingle(
+                    time,
+                    0,
+                    _slot0.tick,
+                    _slot0.observationIndex,
+                    liquidity,
+                    _slot0.observationCardinality
+                );
             return (
                 tickCumulative - tickCumulativeLower - tickCumulativeUpper,
                 secondsPerLiquidityCumulativeX128 -
@@ -232,10 +232,8 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         }
     }
 
-    /// @inheritdoc IVaporDEXV2PoolDerivedState
-    function observe(
-        uint32[] calldata secondsAgos
-    )
+    /// @inheritdoc IUniswapV3PoolDerivedState
+    function observe(uint32[] calldata secondsAgos)
         external
         view
         override
@@ -253,21 +251,22 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
             );
     }
 
-    /// @inheritdoc IVaporDEXV2PoolActions
-    function increaseObservationCardinalityNext(
-        uint16 observationCardinalityNext
-    ) external override lock noDelegateCall {
+    /// @inheritdoc IUniswapV3PoolActions
+    function increaseObservationCardinalityNext(uint16 observationCardinalityNext)
+        external
+        override
+        lock
+        noDelegateCall
+    {
         uint16 observationCardinalityNextOld = slot0.observationCardinalityNext; // for the event
-        uint16 observationCardinalityNextNew = observations.grow(
-            observationCardinalityNextOld,
-            observationCardinalityNext
-        );
+        uint16 observationCardinalityNextNew =
+            observations.grow(observationCardinalityNextOld, observationCardinalityNext);
         slot0.observationCardinalityNext = observationCardinalityNextNew;
         if (observationCardinalityNextOld != observationCardinalityNextNew)
             emit IncreaseObservationCardinalityNext(observationCardinalityNextOld, observationCardinalityNextNew);
     }
 
-    /// @inheritdoc IVaporDEXV2PoolActions
+    /// @inheritdoc IUniswapV3PoolActions
     /// @dev not locked because it initializes unlocked
     function initialize(uint160 sqrtPriceX96) external override {
         require(slot0.sqrtPriceX96 == 0, 'AI');
@@ -304,9 +303,15 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
     /// @return position a storage pointer referencing the position with the given owner and tick range
     /// @return amount0 the amount of token0 owed to the pool, negative if the pool should pay the recipient
     /// @return amount1 the amount of token1 owed to the pool, negative if the pool should pay the recipient
-    function _modifyPosition(
-        ModifyPositionParams memory params
-    ) private noDelegateCall returns (Position.Info storage position, int256 amount0, int256 amount1) {
+    function _modifyPosition(ModifyPositionParams memory params)
+        private
+        noDelegateCall
+        returns (
+            Position.Info storage position,
+            int256 amount0,
+            int256 amount1
+        )
+    {
         checkTicks(params.tickLower, params.tickUpper);
 
         Slot0 memory _slot0 = slot0; // SLOAD for gas optimization
@@ -388,14 +393,15 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         bool flippedUpper;
         if (liquidityDelta != 0) {
             uint32 time = _blockTimestamp();
-            (int56 tickCumulative, uint160 secondsPerLiquidityCumulativeX128) = observations.observeSingle(
-                time,
-                0,
-                slot0.tick,
-                slot0.observationIndex,
-                liquidity,
-                slot0.observationCardinality
-            );
+            (int56 tickCumulative, uint160 secondsPerLiquidityCumulativeX128) =
+                observations.observeSingle(
+                    time,
+                    0,
+                    slot0.tick,
+                    slot0.observationIndex,
+                    liquidity,
+                    slot0.observationCardinality
+                );
 
             flippedLower = ticks.update(
                 tickLower,
@@ -430,13 +436,8 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
             }
         }
 
-        (uint256 feeGrowthInside0X128, uint256 feeGrowthInside1X128) = ticks.getFeeGrowthInside(
-            tickLower,
-            tickUpper,
-            tick,
-            _feeGrowthGlobal0X128,
-            _feeGrowthGlobal1X128
-        );
+        (uint256 feeGrowthInside0X128, uint256 feeGrowthInside1X128) =
+            ticks.getFeeGrowthInside(tickLower, tickUpper, tick, _feeGrowthGlobal0X128, _feeGrowthGlobal1X128);
 
         position.update(liquidityDelta, feeGrowthInside0X128, feeGrowthInside1X128);
 
@@ -451,7 +452,7 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         }
     }
 
-    /// @inheritdoc IVaporDEXV2PoolActions
+    /// @inheritdoc IUniswapV3PoolActions
     /// @dev noDelegateCall is applied indirectly via _modifyPosition
     function mint(
         address recipient,
@@ -461,14 +462,15 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         bytes calldata data
     ) external override lock returns (uint256 amount0, uint256 amount1) {
         require(amount > 0);
-        (, int256 amount0Int, int256 amount1Int) = _modifyPosition(
-            ModifyPositionParams({
-                owner: recipient,
-                tickLower: tickLower,
-                tickUpper: tickUpper,
-                liquidityDelta: int256(amount).toInt128()
-            })
-        );
+        (, int256 amount0Int, int256 amount1Int) =
+            _modifyPosition(
+                ModifyPositionParams({
+                    owner: recipient,
+                    tickLower: tickLower,
+                    tickUpper: tickUpper,
+                    liquidityDelta: int256(amount).toInt128()
+                })
+            );
 
         amount0 = uint256(amount0Int);
         amount1 = uint256(amount1Int);
@@ -477,14 +479,14 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         uint256 balance1Before;
         if (amount0 > 0) balance0Before = balance0();
         if (amount1 > 0) balance1Before = balance1();
-        IVaporDEXV2MintCallback(msg.sender).VaporDEXV2MintCallback(amount0, amount1, data);
+        IUniswapV3MintCallback(msg.sender).uniswapV3MintCallback(amount0, amount1, data);
         if (amount0 > 0) require(balance0Before.add(amount0) <= balance0(), 'M0');
         if (amount1 > 0) require(balance1Before.add(amount1) <= balance1(), 'M1');
 
         emit Mint(msg.sender, recipient, tickLower, tickUpper, amount, amount0, amount1);
     }
 
-    /// @inheritdoc IVaporDEXV2PoolActions
+    /// @inheritdoc IUniswapV3PoolActions
     function collect(
         address recipient,
         int24 tickLower,
@@ -510,21 +512,22 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         emit Collect(msg.sender, recipient, tickLower, tickUpper, amount0, amount1);
     }
 
-    /// @inheritdoc IVaporDEXV2PoolActions
+    /// @inheritdoc IUniswapV3PoolActions
     /// @dev noDelegateCall is applied indirectly via _modifyPosition
     function burn(
         int24 tickLower,
         int24 tickUpper,
         uint128 amount
     ) external override lock returns (uint256 amount0, uint256 amount1) {
-        (Position.Info storage position, int256 amount0Int, int256 amount1Int) = _modifyPosition(
-            ModifyPositionParams({
-                owner: msg.sender,
-                tickLower: tickLower,
-                tickUpper: tickUpper,
-                liquidityDelta: -int256(amount).toInt128()
-            })
-        );
+        (Position.Info storage position, int256 amount0Int, int256 amount1Int) =
+            _modifyPosition(
+                ModifyPositionParams({
+                    owner: msg.sender,
+                    tickLower: tickLower,
+                    tickUpper: tickUpper,
+                    liquidityDelta: -int256(amount).toInt128()
+                })
+            );
 
         amount0 = uint256(-amount0Int);
         amount1 = uint256(-amount1Int);
@@ -589,7 +592,7 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         uint256 feeAmount;
     }
 
-    /// @inheritdoc IVaporDEXV2PoolActions
+    /// @inheritdoc IUniswapV3PoolActions
     function swap(
         address recipient,
         bool zeroForOne,
@@ -611,26 +614,28 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
 
         slot0.unlocked = false;
 
-        SwapCache memory cache = SwapCache({
-            liquidityStart: liquidity,
-            blockTimestamp: _blockTimestamp(),
-            feeProtocol: zeroForOne ? (slot0Start.feeProtocol % 16) : (slot0Start.feeProtocol >> 4),
-            secondsPerLiquidityCumulativeX128: 0,
-            tickCumulative: 0,
-            computedLatestObservation: false
-        });
+        SwapCache memory cache =
+            SwapCache({
+                liquidityStart: liquidity,
+                blockTimestamp: _blockTimestamp(),
+                feeProtocol: zeroForOne ? (slot0Start.feeProtocol % 16) : (slot0Start.feeProtocol >> 4),
+                secondsPerLiquidityCumulativeX128: 0,
+                tickCumulative: 0,
+                computedLatestObservation: false
+            });
 
         bool exactInput = amountSpecified > 0;
 
-        SwapState memory state = SwapState({
-            amountSpecifiedRemaining: amountSpecified,
-            amountCalculated: 0,
-            sqrtPriceX96: slot0Start.sqrtPriceX96,
-            tick: slot0Start.tick,
-            feeGrowthGlobalX128: zeroForOne ? feeGrowthGlobal0X128 : feeGrowthGlobal1X128,
-            protocolFee: 0,
-            liquidity: cache.liquidityStart
-        });
+        SwapState memory state =
+            SwapState({
+                amountSpecifiedRemaining: amountSpecified,
+                amountCalculated: 0,
+                sqrtPriceX96: slot0Start.sqrtPriceX96,
+                tick: slot0Start.tick,
+                feeGrowthGlobalX128: zeroForOne ? feeGrowthGlobal0X128 : feeGrowthGlobal1X128,
+                protocolFee: 0,
+                liquidity: cache.liquidityStart
+            });
 
         // continue swapping as long as we haven't used the entire input/output and haven't reached the price limit
         while (state.amountSpecifiedRemaining != 0 && state.sqrtPriceX96 != sqrtPriceLimitX96) {
@@ -701,14 +706,15 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
                         );
                         cache.computedLatestObservation = true;
                     }
-                    int128 liquidityNet = ticks.cross(
-                        step.tickNext,
-                        (zeroForOne ? state.feeGrowthGlobalX128 : feeGrowthGlobal0X128),
-                        (zeroForOne ? feeGrowthGlobal1X128 : state.feeGrowthGlobalX128),
-                        cache.secondsPerLiquidityCumulativeX128,
-                        cache.tickCumulative,
-                        cache.blockTimestamp
-                    );
+                    int128 liquidityNet =
+                        ticks.cross(
+                            step.tickNext,
+                            (zeroForOne ? state.feeGrowthGlobalX128 : feeGrowthGlobal0X128),
+                            (zeroForOne ? feeGrowthGlobal1X128 : state.feeGrowthGlobalX128),
+                            cache.secondsPerLiquidityCumulativeX128,
+                            cache.tickCumulative,
+                            cache.blockTimestamp
+                        );
                     // if we're moving leftward, we interpret liquidityNet as the opposite sign
                     // safe because liquidityNet cannot be type(int128).min
                     if (zeroForOne) liquidityNet = -liquidityNet;
@@ -725,14 +731,15 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
 
         // update tick and write an oracle entry if the tick change
         if (state.tick != slot0Start.tick) {
-            (uint16 observationIndex, uint16 observationCardinality) = observations.write(
-                slot0Start.observationIndex,
-                cache.blockTimestamp,
-                slot0Start.tick,
-                cache.liquidityStart,
-                slot0Start.observationCardinality,
-                slot0Start.observationCardinalityNext
-            );
+            (uint16 observationIndex, uint16 observationCardinality) =
+                observations.write(
+                    slot0Start.observationIndex,
+                    cache.blockTimestamp,
+                    slot0Start.tick,
+                    cache.liquidityStart,
+                    slot0Start.observationCardinality,
+                    slot0Start.observationCardinalityNext
+                );
             (slot0.sqrtPriceX96, slot0.tick, slot0.observationIndex, slot0.observationCardinality) = (
                 state.sqrtPriceX96,
                 state.tick,
@@ -766,13 +773,13 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
             if (amount1 < 0) TransferHelper.safeTransfer(token1, recipient, uint256(-amount1));
 
             uint256 balance0Before = balance0();
-            IVaporDEXV2SwapCallback(msg.sender).VaporDEXV2SwapCallback(amount0, amount1, data);
+            IUniswapV3SwapCallback(msg.sender).uniswapV3SwapCallback(amount0, amount1, data);
             require(balance0Before.add(uint256(amount0)) <= balance0(), 'IIA');
         } else {
             if (amount0 < 0) TransferHelper.safeTransfer(token0, recipient, uint256(-amount0));
 
             uint256 balance1Before = balance1();
-            IVaporDEXV2SwapCallback(msg.sender).VaporDEXV2SwapCallback(amount0, amount1, data);
+            IUniswapV3SwapCallback(msg.sender).uniswapV3SwapCallback(amount0, amount1, data);
             require(balance1Before.add(uint256(amount1)) <= balance1(), 'IIA');
         }
 
@@ -780,7 +787,7 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         slot0.unlocked = true;
     }
 
-    /// @inheritdoc IVaporDEXV2PoolActions
+    /// @inheritdoc IUniswapV3PoolActions
     function flash(
         address recipient,
         uint256 amount0,
@@ -798,7 +805,7 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         if (amount0 > 0) TransferHelper.safeTransfer(token0, recipient, amount0);
         if (amount1 > 0) TransferHelper.safeTransfer(token1, recipient, amount1);
 
-        IVaporDEXV2FlashCallback(msg.sender).VaporDEXV2FlashCallback(fee0, fee1, data);
+        IUniswapV3FlashCallback(msg.sender).uniswapV3FlashCallback(fee0, fee1, data);
 
         uint256 balance0After = balance0();
         uint256 balance1After = balance1();
@@ -826,7 +833,7 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         emit Flash(msg.sender, recipient, amount0, amount1, paid0, paid1);
     }
 
-    /// @inheritdoc IVaporDEXV2PoolOwnerActions
+    /// @inheritdoc IUniswapV3PoolOwnerActions
     function setFeeProtocol(uint8 feeProtocol0, uint8 feeProtocol1) external override lock onlyFactoryOwner {
         require(
             (feeProtocol0 == 0 || (feeProtocol0 >= 4 && feeProtocol0 <= 10)) &&
@@ -837,7 +844,7 @@ contract VaporDEXV2Pool is IVaporDEXV2Pool, NoDelegateCall {
         emit SetFeeProtocol(feeProtocolOld % 16, feeProtocolOld >> 4, feeProtocol0, feeProtocol1);
     }
 
-    /// @inheritdoc IVaporDEXV2PoolOwnerActions
+    /// @inheritdoc IUniswapV3PoolOwnerActions
     function collectProtocol(
         address recipient,
         uint128 amount0Requested,

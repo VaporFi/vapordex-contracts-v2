@@ -2,7 +2,7 @@
 // uniswap-v3-core/contracts/test/TestERC20.sol
 pragma solidity =0.7.6;
 
-import '@vapordex/v2-core/contracts/interfaces/IERC20Minimal.sol';
+import '@uniswap/v3-core/contracts/interfaces/IERC20Minimal.sol';
 
 contract TestERC20 is IERC20Minimal {
     mapping(address => uint256) public override balanceOf;

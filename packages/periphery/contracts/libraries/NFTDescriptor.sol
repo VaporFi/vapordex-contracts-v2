@@ -2,10 +2,10 @@
 pragma solidity >=0.7.0;
 pragma abicoder v2;
 
-import '@vapordex/v2-core/contracts/interfaces/IVaporDEXV2Pool.sol';
-import '@vapordex/v2-core/contracts/libraries/TickMath.sol';
-import '@vapordex/v2-core/contracts/libraries/BitMath.sol';
-import '@vapordex/v2-core/contracts/libraries/FullMath.sol';
+import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
+import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
+import '@uniswap/v3-core/contracts/libraries/BitMath.sol';
+import '@uniswap/v3-core/contracts/libraries/FullMath.sol';
 import '@openzeppelin/contracts/utils/Strings.sol';
 import '@openzeppelin/contracts/math/SafeMath.sol';
 import '@openzeppelin/contracts/math/SignedSafeMath.sol';
@@ -110,7 +110,7 @@ library NFTDescriptor {
         return
             string(
                 abi.encodePacked(
-                    'This NFT represents a liquidity position in a VaporDEX V2 ',
+                    'This NFT represents a liquidity position in a Uniswap V3 ',
                     quoteTokenSymbol,
                     '-',
                     baseTokenSymbol,

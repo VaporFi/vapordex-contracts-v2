@@ -2,21 +2,21 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import './interfaces/IVaporDEXV2Staker.sol';
+import './interfaces/IUniswapV3Staker.sol';
 import './libraries/IncentiveId.sol';
 import './libraries/RewardMath.sol';
 import './libraries/NFTPositionInfo.sol';
 import './libraries/TransferHelperExtended.sol';
 
-import '@vapordex/v2-core/contracts/interfaces/IVaporDEXV2Factory.sol';
-import '@vapordex/v2-core/contracts/interfaces/IVaporDEXV2Pool.sol';
-import '@vapordex/v2-core/contracts/interfaces/IERC20Minimal.sol';
+import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Factory.sol';
+import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
+import '@uniswap/v3-core/contracts/interfaces/IERC20Minimal.sol';
 
-import '@vapordex/v2-periphery/contracts/interfaces/INonfungiblePositionManager.sol';
-import '@vapordex/v2-periphery/contracts/base/Multicall.sol';
+import '@uniswap/v3-periphery/contracts/interfaces/INonfungiblePositionManager.sol';
+import '@uniswap/v3-periphery/contracts/base/Multicall.sol';
 
-/// @title VaporDEX V2 canonical staking interface
-contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
+/// @title Uniswap V3 canonical staking interface
+contract UniswapV3Staker is IUniswapV3Staker, Multicall {
     /// @notice Represents a staking incentive
     struct Incentive {
         uint256 totalRewardUnclaimed;
@@ -39,14 +39,14 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         uint128 liquidityIfOverflow;
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
-    IVaporDEXV2Factory public immutable override factory;
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
+    IUniswapV3Factory public immutable override factory;
+    /// @inheritdoc IUniswapV3Staker
     INonfungiblePositionManager public immutable override nonfungiblePositionManager;
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     uint256 public immutable override maxIncentiveStartLeadTime;
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     uint256 public immutable override maxIncentiveDuration;
 
     /// @dev bytes32 refers to the return value of IncentiveId.compute
@@ -58,7 +58,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
     /// @dev stakes[tokenId][incentiveHash] => Stake
     mapping(uint256 => mapping(bytes32 => Stake)) private _stakes;
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function stakes(
         uint256 tokenId,
         bytes32 incentiveId
@@ -72,15 +72,15 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
     }
 
     /// @dev rewards[rewardToken][owner] => uint256
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     mapping(IERC20Minimal => mapping(address => uint256)) public override rewards;
 
-    /// @param _factory the VaporDEX V2 factory
+    /// @param _factory the Uniswap V3 factory
     /// @param _nonfungiblePositionManager the NFT position manager contract address
     /// @param _maxIncentiveStartLeadTime the max duration of an incentive in seconds
     /// @param _maxIncentiveDuration the max amount of seconds into the future the incentive startTime can be set
     constructor(
-        IVaporDEXV2Factory _factory,
+        IUniswapV3Factory _factory,
         INonfungiblePositionManager _nonfungiblePositionManager,
         uint256 _maxIncentiveStartLeadTime,
         uint256 _maxIncentiveDuration
@@ -91,21 +91,21 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         maxIncentiveDuration = _maxIncentiveDuration;
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function createIncentive(IncentiveKey memory key, uint256 reward) external override {
-        require(reward > 0, 'VaporDEXV2Staker::createIncentive: reward must be positive');
+        require(reward > 0, 'UniswapV3Staker::createIncentive: reward must be positive');
         require(
             block.timestamp <= key.startTime,
-            'VaporDEXV2Staker::createIncentive: start time must be now or in the future'
+            'UniswapV3Staker::createIncentive: start time must be now or in the future'
         );
         require(
             key.startTime - block.timestamp <= maxIncentiveStartLeadTime,
-            'VaporDEXV2Staker::createIncentive: start time too far into future'
+            'UniswapV3Staker::createIncentive: start time too far into future'
         );
-        require(key.startTime < key.endTime, 'VaporDEXV2Staker::createIncentive: start time must be before end time');
+        require(key.startTime < key.endTime, 'UniswapV3Staker::createIncentive: start time must be before end time');
         require(
             key.endTime - key.startTime <= maxIncentiveDuration,
-            'VaporDEXV2Staker::createIncentive: incentive duration is too long'
+            'UniswapV3Staker::createIncentive: incentive duration is too long'
         );
 
         bytes32 incentiveId = IncentiveId.compute(key);
@@ -117,19 +117,19 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         emit IncentiveCreated(key.rewardToken, key.pool, key.startTime, key.endTime, key.refundee, reward);
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function endIncentive(IncentiveKey memory key) external override returns (uint256 refund) {
-        require(block.timestamp >= key.endTime, 'VaporDEXV2Staker::endIncentive: cannot end incentive before end time');
+        require(block.timestamp >= key.endTime, 'UniswapV3Staker::endIncentive: cannot end incentive before end time');
 
         bytes32 incentiveId = IncentiveId.compute(key);
         Incentive storage incentive = incentives[incentiveId];
 
         refund = incentive.totalRewardUnclaimed;
 
-        require(refund > 0, 'VaporDEXV2Staker::endIncentive: no refund available');
+        require(refund > 0, 'UniswapV3Staker::endIncentive: no refund available');
         require(
             incentive.numberOfStakes == 0,
-            'VaporDEXV2Staker::endIncentive: cannot end incentive while deposits are staked'
+            'UniswapV3Staker::endIncentive: cannot end incentive while deposits are staked'
         );
 
         // issue the refund
@@ -141,7 +141,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         emit IncentiveEnded(incentiveId, refund);
     }
 
-    /// @notice Upon receiving a VaporDEX V2 ERC721, creates the token deposit setting owner to `from`. Also stakes token
+    /// @notice Upon receiving a Uniswap V3 ERC721, creates the token deposit setting owner to `from`. Also stakes token
     /// in one or more incentives if properly formatted `data` has a length > 0.
     /// @inheritdoc IERC721Receiver
     function onERC721Received(
@@ -152,7 +152,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
     ) external override returns (bytes4) {
         require(
             msg.sender == address(nonfungiblePositionManager),
-            'VaporDEXV2Staker::onERC721Received: not a univ3 nft'
+            'UniswapV3Staker::onERC721Received: not a univ3 nft'
         );
 
         (, , , , , int24 tickLower, int24 tickUpper, , , , , ) = nonfungiblePositionManager.positions(tokenId);
@@ -173,21 +173,21 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         return this.onERC721Received.selector;
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function transferDeposit(uint256 tokenId, address to) external override {
-        require(to != address(0), 'VaporDEXV2Staker::transferDeposit: invalid transfer recipient');
+        require(to != address(0), 'UniswapV3Staker::transferDeposit: invalid transfer recipient');
         address owner = deposits[tokenId].owner;
-        require(owner == msg.sender, 'VaporDEXV2Staker::transferDeposit: can only be called by deposit owner');
+        require(owner == msg.sender, 'UniswapV3Staker::transferDeposit: can only be called by deposit owner');
         deposits[tokenId].owner = to;
         emit DepositTransferred(tokenId, owner, to);
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function withdrawToken(uint256 tokenId, address to, bytes memory data) external override {
-        require(to != address(this), 'VaporDEXV2Staker::withdrawToken: cannot withdraw to staker');
+        require(to != address(this), 'UniswapV3Staker::withdrawToken: cannot withdraw to staker');
         Deposit memory deposit = deposits[tokenId];
-        require(deposit.numberOfStakes == 0, 'VaporDEXV2Staker::withdrawToken: cannot withdraw token while staked');
-        require(deposit.owner == msg.sender, 'VaporDEXV2Staker::withdrawToken: only owner can withdraw token');
+        require(deposit.numberOfStakes == 0, 'UniswapV3Staker::withdrawToken: cannot withdraw token while staked');
+        require(deposit.owner == msg.sender, 'UniswapV3Staker::withdrawToken: only owner can withdraw token');
 
         delete deposits[tokenId];
         emit DepositTransferred(tokenId, deposit.owner, address(0));
@@ -195,21 +195,21 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         nonfungiblePositionManager.safeTransferFrom(address(this), to, tokenId, data);
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function stakeToken(IncentiveKey memory key, uint256 tokenId) external override {
-        require(deposits[tokenId].owner == msg.sender, 'VaporDEXV2Staker::stakeToken: only owner can stake token');
+        require(deposits[tokenId].owner == msg.sender, 'UniswapV3Staker::stakeToken: only owner can stake token');
 
         _stakeToken(key, tokenId);
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function unstakeToken(IncentiveKey memory key, uint256 tokenId) external override {
         Deposit memory deposit = deposits[tokenId];
         // anyone can call unstakeToken if the block time is after the end time of the incentive
         if (block.timestamp < key.endTime) {
             require(
                 deposit.owner == msg.sender,
-                'VaporDEXV2Staker::unstakeToken: only owner can withdraw token before incentive end time'
+                'UniswapV3Staker::unstakeToken: only owner can withdraw token before incentive end time'
             );
         }
 
@@ -217,7 +217,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
 
         (uint160 secondsPerLiquidityInsideInitialX128, uint128 liquidity) = stakes(tokenId, incentiveId);
 
-        require(liquidity != 0, 'VaporDEXV2Staker::unstakeToken: stake does not exist');
+        require(liquidity != 0, 'UniswapV3Staker::unstakeToken: stake does not exist');
 
         Incentive storage incentive = incentives[incentiveId];
 
@@ -254,7 +254,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         emit TokenUnstaked(tokenId, incentiveId);
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function claimReward(
         IERC20Minimal rewardToken,
         address to,
@@ -271,7 +271,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         emit RewardClaimed(to, reward);
     }
 
-    /// @inheritdoc IVaporDEXV2Staker
+    /// @inheritdoc IUniswapV3Staker
     function getRewardInfo(
         IncentiveKey memory key,
         uint256 tokenId
@@ -279,7 +279,7 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
         bytes32 incentiveId = IncentiveId.compute(key);
 
         (uint160 secondsPerLiquidityInsideInitialX128, uint128 liquidity) = stakes(tokenId, incentiveId);
-        require(liquidity > 0, 'VaporDEXV2Staker::getRewardInfo: stake does not exist');
+        require(liquidity > 0, 'UniswapV3Staker::getRewardInfo: stake does not exist');
 
         Deposit memory deposit = deposits[tokenId];
         Incentive memory incentive = incentives[incentiveId];
@@ -303,28 +303,28 @@ contract VaporDEXV2Staker is IVaporDEXV2Staker, Multicall {
 
     /// @dev Stakes a deposited token without doing an ownership check
     function _stakeToken(IncentiveKey memory key, uint256 tokenId) private {
-        require(block.timestamp >= key.startTime, 'VaporDEXV2Staker::stakeToken: incentive not started');
-        require(block.timestamp < key.endTime, 'VaporDEXV2Staker::stakeToken: incentive ended');
+        require(block.timestamp >= key.startTime, 'UniswapV3Staker::stakeToken: incentive not started');
+        require(block.timestamp < key.endTime, 'UniswapV3Staker::stakeToken: incentive ended');
 
         bytes32 incentiveId = IncentiveId.compute(key);
 
         require(
             incentives[incentiveId].totalRewardUnclaimed > 0,
-            'VaporDEXV2Staker::stakeToken: non-existent incentive'
+            'UniswapV3Staker::stakeToken: non-existent incentive'
         );
         require(
             _stakes[tokenId][incentiveId].liquidityNoOverflow == 0,
-            'VaporDEXV2Staker::stakeToken: token already staked'
+            'UniswapV3Staker::stakeToken: token already staked'
         );
 
-        (IVaporDEXV2Pool pool, int24 tickLower, int24 tickUpper, uint128 liquidity) = NFTPositionInfo.getPositionInfo(
+        (IUniswapV3Pool pool, int24 tickLower, int24 tickUpper, uint128 liquidity) = NFTPositionInfo.getPositionInfo(
             factory,
             nonfungiblePositionManager,
             tokenId
         );
 
-        require(pool == key.pool, 'VaporDEXV2Staker::stakeToken: token pool is not the incentive pool');
-        require(liquidity > 0, 'VaporDEXV2Staker::stakeToken: cannot stake token with 0 liquidity');
+        require(pool == key.pool, 'UniswapV3Staker::stakeToken: token pool is not the incentive pool');
+        require(liquidity > 0, 'UniswapV3Staker::stakeToken: cannot stake token with 0 liquidity');
 
         deposits[tokenId].numberOfStakes++;
         incentives[incentiveId].numberOfStakes++;

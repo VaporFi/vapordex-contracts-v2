@@ -2,13 +2,13 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '../interfaces/IVaporDEXV2Staker.sol';
+import '../interfaces/IUniswapV3Staker.sol';
 
 import '../libraries/IncentiveId.sol';
 
 /// @dev Test contract for IncentiveId
 contract TestIncentiveId {
-    function compute(IVaporDEXV2Staker.IncentiveKey memory key) public pure returns (bytes32) {
+    function compute(IUniswapV3Staker.IncentiveKey memory key) public pure returns (bytes32) {
         return IncentiveId.compute(key);
     }
 }
