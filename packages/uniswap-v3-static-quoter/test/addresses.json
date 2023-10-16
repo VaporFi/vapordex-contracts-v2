@@ -92,8 +92,8 @@
   },
   "fuji": {
     "protocols": {
-      "vapordex": {
-        "factory": "0xa49d3fCf9fC70a3aa26d88EF8dEC39fBe6d881C2"
+      "vapordexV2Pools": {
+        "factory": "0xF292f18eba8bDB337A7D7b47a58Be72eDdB37Db8"
       }
     }
   }

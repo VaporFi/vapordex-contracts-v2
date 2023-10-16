@@ -9,30 +9,9 @@ import "hardhat-deploy-ethers";
 
 dotenv.config();
 
-// function getExplorerApiKey() {
-//   const networkNameForEnvKey: any = {
-//     avalanche: "SNOWTRACE_API_KEY",
-//   };
-//   const [networkName] = process.argv.flatMap((e, i, a) =>
-//     e == "--network" ? [a[i + 1]] : []
-//   );
-//   const envKey = networkNameForEnvKey[networkName];
-//   if (envKey) return process.env[envKey];
-// }
-
-const AVALANCHE_RPC = process.env.AVALANCHE_RPC ?? "";
 const FUJI_RPC = process.env.FUJI_RPC ?? "";
 const DEPLOYER_ADDRESS = process.env.DEPLOYER_ADDRESS as string;
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY as string;
-// const ETHERSCAN_API_KEY = getExplorerApiKey();
-
-const avalancheConfig = {
-  url: AVALANCHE_RPC,
-  chainId: 43114,
-  live: true,
-  saveDeployments: true,
-  accounts: [] as string[],
-};
 
 const fujiConfig = {
   url: FUJI_RPC,
@@ -43,7 +22,6 @@ const fujiConfig = {
 };
 
 if (DEPLOYER_PRIVATE_KEY) {
-  avalancheConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   fujiConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 }
 
@@ -51,7 +29,6 @@ const config: HardhatUserConfig = {
   solidity: {
     version: "0.7.6",
     settings: {
-      evmVersion: "istanbul",
       optimizer: {
         enabled: true,
         runs: 1_000_000,
@@ -67,7 +44,6 @@ const config: HardhatUserConfig = {
       live: false,
       saveDeployments: false,
     },
-    avalanche: avalancheConfig,
     fuji: fujiConfig,
   },
   namedAccounts: {
@@ -84,51 +60,7 @@ const config: HardhatUserConfig = {
     flat: true,
     only: [":UniswapV3StaticQuoter"],
   },
-  // etherscan: {
-  //   apiKey: ETHERSCAN_API_KEY,
-  //   customChains: [
-  //     {
-  //       network: "mainnet",
-  //       chainId: 1,
-  //       urls: {
-  //         apiURL: "https://api.etherscan.io/api",
-  //         browserURL: "https://etherscan.io",
-  //       },
-  //     },
-  //     {
-  //       network: "optimism",
-  //       chainId: 10,
-  //       urls: {
-  //         apiURL: "https://api-optimistic.etherscan.io/api",
-  //         browserURL: "https://optimistic.etherscan.io",
-  //       },
-  //     },
-  //     {
-  //       network: "arbitrum",
-  //       chainId: 42161,
-  //       urls: {
-  //         apiURL: "https://api.arbiscan.io/api",
-  //         browserURL: "https://arbiscan.io",
-  //       },
-  //     },
-  //     {
-  //       network: "avalanche",
-  //       chainId: 43114,
-  //       urls: {
-  //         apiURL: "https://api.snowtrace.io/api",
-  //         browserURL: "https://snowtrace.io",
-  //       },
-  //     },
-  //     {
-  //       network: "polygon",
-  //       chainId: 137,
-  //       urls: {
-  //         apiURL: "https://api.polygonscan.com/api",
-  //         browserURL: "https://polygonscan.com",
-  //       },
-  //     },
-  //   ],
-  // },
+
   mocha: {
     timeout: 600000000,
   },

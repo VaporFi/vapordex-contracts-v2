@@ -22,23 +22,32 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   let factory;
   switch (network.name) {
     case "fuji":
-      factory = addresses.fuji.protocols.vapordex.factory;
+      {
+        factory = addresses.fuji.protocols.vapordex.factory;
+      }
       break;
-    case "avalanche": {
+    case "avalanche":
       factory = addresses.avalanche.protocols.vapordexV2.factory;
-    }
+      break;
+    case "base":
+      factory = addresses.base.protocols.uniswapV3.factory;
+      break;
     default:
       factory = addresses.mainnet.protocols.uniswapV3.factory;
       break;
   }
+
   const args = [factory];
   const { deployer } = await getNamedAccounts();
+  console.log(
+    `Deploying quoter on ${network.name} with factory ${factory}, using ${deployer}`
+  );
 
   log("1) Deploy contract");
   const deployResult: any = await deploy(contractName, {
     from: deployer,
     contract: contractName,
-    skipIfAlreadyDeployed: true,
+    skipIfAlreadyDeployed: false,
     log: true,
     args,
   });
