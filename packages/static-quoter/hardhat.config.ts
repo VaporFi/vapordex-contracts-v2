@@ -1,13 +1,11 @@
+import "dotenv/config";
 import { HardhatUserConfig } from "hardhat/config";
-import * as dotenv from "dotenv";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-etherscan";
 import "hardhat-abi-exporter";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
-
-dotenv.config();
 
 // function getExplorerApiKey() {
 //   const networkNameForEnvKey: any = {

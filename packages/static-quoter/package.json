@@ -1,6 +1,7 @@
 {
-  "name": "@eden-network/uniswap-v3-static-quoter",
+  "name": "static-quoter",
   "version": "1.0.0",
+  "private": true,
   "description": "A simplified STATICCALL friendly Uniswap V3 quoter",
   "author": "Jeffrey Quesnelle <jeff@edennetwork.io>",
   "license": "GPL-2.0-or-later",
@@ -25,7 +26,11 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@uniswap/v3-core": "^1.0.1",
-    "@uniswap/v3-periphery": "^1.4.1"
+    "@uniswap/v3-core": "*",
+    "@uniswap/v3-periphery": "*"
+  },
+  "scripts": {
+    "compile": "hardhat compile",
+    "clean": "hardhat clean"
   }
 }

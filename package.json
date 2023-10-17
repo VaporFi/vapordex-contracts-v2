@@ -9,7 +9,8 @@
     "compile": "turbo run compile",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean": "turbo run clean"
   },
   "engines": {
     "node": ">=18.0.0"

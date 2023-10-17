@@ -6,30 +6,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, network } = hre;
   const { deploy, log } = deployments;
 
-  const allowedNetworks = [
-    "optimism",
-    "arbitrum",
-    "mainnet",
-    "polygon",
-    "avalanche",
-    "base",
-    "fuji",
-  ];
+  const allowedNetworks = ["avalanche", "fuji"];
   if (!allowedNetworks.includes(network.name))
     throw new Error(`Wrong network! Only "${allowedNetworks}" supported`);
 
   const contractName = "UniswapV3StaticQuoter";
   let factory;
   switch (network.name) {
-    case "fuji":
-      factory = addresses.fuji.protocols.vapordex.factory;
-      break;
+    case "fuji": {
+      factory = addresses.fuji.protocols.vapordexV2.factory;
+    }
     case "avalanche": {
       factory = addresses.avalanche.protocols.vapordexV2.factory;
     }
-    default:
-      factory = addresses.mainnet.protocols.uniswapV3.factory;
-      break;
   }
   const args = [factory];
   const { deployer } = await getNamedAccounts();
@@ -38,7 +27,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const deployResult: any = await deploy(contractName, {
     from: deployer,
     contract: contractName,
-    skipIfAlreadyDeployed: true,
+    skipIfAlreadyDeployed: false,
     log: true,
     args,
   });
@@ -52,4 +41,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 export default func;
-func.tags = ["uniswapV3"];
+func.tags = ["vapordexV2"];
