@@ -38,7 +38,7 @@
     "eslint-plugin-unused-imports": "^1.1.1",
     "ethereum-waffle": "^3.0.2",
     "ethers": "^5.0.8",
-    "hardhat": "^2.2.0",
+    "hardhat": "^2.8.2",
     "hardhat-contract-sizer": "^2.0.3",
     "lodash": "^4.17.21",
     "mocha-chai-jest-snapshot": "^1.1.0",
