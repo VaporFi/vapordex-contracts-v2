@@ -1,4 +1,10 @@
 {
+  "telos": {
+    "tokens": { "weth": "0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E" }
+  },
+  "telosTestnet": {
+    "tokens": { "weth": "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9" }
+  },
   "mainnet": {
     "tokens": {
       "weth": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
