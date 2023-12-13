@@ -1,9 +1,19 @@
 {
   "telos": {
-    "tokens": { "weth": "0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E" }
+    "tokens": { "weth": "0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E" },
+    "protocols": {
+      "vapordexV2": {
+        "factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
+      }
+    }
   },
   "telosTestnet": {
-    "tokens": { "weth": "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9" }
+    "tokens": { "weth": "0xaE85Bf723A9e74d6c663dd226996AC1b8d075AA9" },
+    "protocols": {
+      "vapordexV2": {
+        "factory": "0x36bDeB542B7c0Da5961c2EB4Efad2C9F6Ac2aE6c"
+      }
+    }
   },
   "mainnet": {
     "tokens": {
