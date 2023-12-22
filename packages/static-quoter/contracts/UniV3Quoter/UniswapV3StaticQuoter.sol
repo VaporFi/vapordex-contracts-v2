@@ -18,8 +18,6 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
     using Path for bytes;
 
     address immutable factory;
-    /// @dev Transient storage variable used to check a safety condition in exact output swaps.
-    uint256 private amountOutCached;
 
     constructor(address _factory) {
         factory = _factory;
