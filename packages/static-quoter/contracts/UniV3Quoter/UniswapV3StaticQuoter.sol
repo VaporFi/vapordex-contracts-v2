@@ -85,23 +85,4 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
             }
         }
     }
-
-    function quoteExactOutputSingle(QuoteExactOutputSingleParams memory params)
-        public view
-        returns (uint256 amountIn)
-    {
-        bool zeroForOne = params.tokenIn < params.tokenOut;
-        IUniswapV3Pool pool = getPool(params.tokenIn, params.tokenOut, params.fee);
-
-        (int256 amount0, int256 amount1) = quote(
-            address(pool),
-            zeroForOne,
-            params.amountOut.toInt256(),
-            params.sqrtPriceLimitX96 == 0
-                ? (zeroForOne ? TickMath.MAX_SQRT_RATIO - 1 : TickMath.MIN_SQRT_RATIO + 1)
-                : params.sqrtPriceLimitX96
-        );
-
-        return zeroForOne ? uint256(-amount1) : uint256(-amount0);
-    }
 }
