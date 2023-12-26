@@ -17,7 +17,7 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
     using SafeCast for int256;
     using Path for bytes;
 
-    address immutable factory;
+    address public immutable factory;
 
     constructor(address _factory) {
         factory = _factory;
@@ -85,4 +85,6 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
             }
         }
     }
+
+
 }
