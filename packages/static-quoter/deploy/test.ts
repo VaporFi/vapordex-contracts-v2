@@ -6,20 +6,22 @@ async function main() {
 
   const contract = await ethers.getContractAt(
     contractName,
-    "0x5d0A3f51f52194085dA39b3407B4318167c38551"
+    "0xcB44ba54Edb00e89a1722b677707E898b7c63BF8"
   );
 
   const args = [
-    "0xbb742cfdB20c1d9Da3363CA12Bb1584634987327", // Roy
     "0xbA3136bE37807f46849a549a1733178A7A25803F", // Vape
-    parseEther("100"),
+    "0xbb742cfdB20c1d9Da3363CA12Bb1584634987327", // Roy
+    parseEther("10"),
     3000, //  fee
     0,
   ];
 
   const res = await contract.quoteExactInputSingle(args);
+  const res1 = await contract.quoteExactOutputSingle(args);
 
-  console.log(Number(res));
+  console.log("exact input:", Number(res) / 1e18);
+  console.log("exact output:", Number(res1) / 1e18);
 }
 
 main()
