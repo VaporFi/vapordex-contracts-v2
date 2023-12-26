@@ -66,7 +66,7 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
     function quoteExactOutputSingle(
         QuoteExactOutputSingleParams memory params
     ) public view returns (uint256 amountIn) {
-        bool zeroForOne = params.tokenIn > params.tokenOut;
+        bool zeroForOne = params.tokenIn < params.tokenOut;
         IUniswapV3Pool pool = getPool(
             params.tokenIn,
             params.tokenOut,
@@ -86,7 +86,14 @@ contract UniswapV3StaticQuoter is IUniswapV3StaticQuoter, UniV3QuoterCore {
                 : params.sqrtPriceLimitX96
         );
 
-        return zeroForOne ? uint256(amount0) : uint256(amount1);
+        uint256 amountOutNew;
+        (amountIn, amountOutNew) = zeroForOne
+            ? (uint256(amount0), uint256(-amount1))
+            : (uint256(amount1), uint256(-amount0));
+
+        if (params.sqrtPriceLimitX96 == 0) {
+            require(amountOutNew == params.amountOut, "INVALID AMOUNT OUT");
+        }
     }
 
     function quoteExactInput(
