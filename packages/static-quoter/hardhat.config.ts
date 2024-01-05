@@ -20,6 +20,8 @@ import "hardhat-deploy-ethers";
 
 const AVALANCHE_RPC = process.env.AVALANCHE_RPC ?? "";
 const FUJI_RPC = process.env.FUJI_RPC ?? "";
+const TELOS_TESTNET_RPC = process.env.TELOS_TESTNET_RPC ?? "";
+const TELOS_RPC = process.env.TELOS_RPC ?? "";
 const DEPLOYER_ADDRESS = process.env.DEPLOYER_ADDRESS as string;
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY as string;
 // const ETHERSCAN_API_KEY = getExplorerApiKey();
@@ -40,9 +42,27 @@ const fujiConfig = {
   accounts: [] as string[],
 };
 
+const telosTestnetConfig = {
+  url: TELOS_TESTNET_RPC,
+  chainId: 41,
+  live: true,
+  saveDeployments: true,
+  accounts: [] as string[],
+};
+
+const telosConfig = {
+  url: TELOS_RPC,
+  chainId: 40,
+  live: true,
+  saveDeployments: true,
+  accounts: [] as string[],
+};
+
 if (DEPLOYER_PRIVATE_KEY) {
   avalancheConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   fujiConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
+  telosTestnetConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
+  telosConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 }
 
 const config: HardhatUserConfig = {
@@ -67,6 +87,8 @@ const config: HardhatUserConfig = {
     },
     avalanche: avalancheConfig,
     fuji: fujiConfig,
+    telosTestnet: telosTestnetConfig,
+    telos: telosConfig,
   },
   namedAccounts: {
     deployer: {
@@ -74,6 +96,10 @@ const config: HardhatUserConfig = {
       1: DEPLOYER_ADDRESS,
       10: DEPLOYER_ADDRESS,
       42161: DEPLOYER_ADDRESS,
+      43114: DEPLOYER_ADDRESS,
+      43113: DEPLOYER_ADDRESS,
+      40: DEPLOYER_ADDRESS,
+      41: DEPLOYER_ADDRESS,
     },
   },
   abiExporter: {

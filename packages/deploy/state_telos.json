@@ -1,1 +1,14 @@
-{"v3CoreFactoryAddress":"0x62B672E531f8c11391019F6fba0b8B6143504169","multicall2Address":"0x1FeD9CBF8c47cbe64667fbb28FAC8c812f4e8426","proxyAdminAddress":"0xC26f516886CbDE5Bb8E5246e62057F1A94EEcd43","tickLensAddress":"0xBb017b46375d510093c285D1e2b11D8c4EE9036F","nftDescriptorLibraryAddressV1_3_0":"0xb815f030f12F72dE4B5b7377aBBEAB0FF99Fe0Ad","nonfungibleTokenPositionDescriptorAddressV1_3_0":"0xdD231d6717D7Ef4522be17e2b901359b0030029F","descriptorProxyAddress":"0x68aEaE3Aa461f3aeE34ACF395B2c3E30FcF96791","nonfungibleTokenPositionManagerAddress":"0xC967b23826DdAB00d9AAd3702CbF5261B7Ed9a3a","v3MigratorAddress":"0xEA3379a026cb3E6c5aC847f8E24e523c762b0C6E","v3StakerAddress":"0x1f57a224C832c6Cf9d0c5A90Aec00c7c43189Ae3","quoterV2Address":"0xC8C97D11184069CdD2dfE85f097c607ed3272572","swapRouter02":"0xe61EFa294C7eEC0C96b3df79B5c1975f0613548A"}
+{
+  "v3CoreFactoryAddress": "0x62B672E531f8c11391019F6fba0b8B6143504169",
+  "multicall2Address": "0x1FeD9CBF8c47cbe64667fbb28FAC8c812f4e8426",
+  "proxyAdminAddress": "0xC26f516886CbDE5Bb8E5246e62057F1A94EEcd43",
+  "tickLensAddress": "0xBb017b46375d510093c285D1e2b11D8c4EE9036F",
+  "nftDescriptorLibraryAddressV1_3_0": "0xb815f030f12F72dE4B5b7377aBBEAB0FF99Fe0Ad",
+  "nonfungibleTokenPositionDescriptorAddressV1_3_0": "0xdD231d6717D7Ef4522be17e2b901359b0030029F",
+  "descriptorProxyAddress": "0x68aEaE3Aa461f3aeE34ACF395B2c3E30FcF96791",
+  "nonfungibleTokenPositionManagerAddress": "0xC967b23826DdAB00d9AAd3702CbF5261B7Ed9a3a",
+  "v3MigratorAddress": "0xEA3379a026cb3E6c5aC847f8E24e523c762b0C6E",
+  "v3StakerAddress": "0x1f57a224C832c6Cf9d0c5A90Aec00c7c43189Ae3",
+  "quoterV2Address": "0xC8C97D11184069CdD2dfE85f097c607ed3272572",
+  "swapRouter02": "0xe61EFa294C7eEC0C96b3df79B5c1975f0613548A"
+}

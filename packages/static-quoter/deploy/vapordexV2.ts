@@ -6,7 +6,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, network } = hre;
   const { deploy, log } = deployments;
 
-  const allowedNetworks = ["avalanche", "fuji"];
+  const allowedNetworks = ["avalanche", "fuji", "telos", "telosTestnet"];
   if (!allowedNetworks.includes(network.name))
     throw new Error(`Wrong network! Only "${allowedNetworks}" supported`);
 
@@ -18,6 +18,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     }
     case "avalanche": {
       factory = addresses.avalanche.protocols.vapordexV2.factory;
+    }
+    case "telosTestnet": {
+      factory = addresses.telosTestnet.protocols.vapordexV2.factory;
+    }
+    case "telos": {
+      factory = addresses.telos.protocols.vapordexV2.factory;
     }
   }
   const args = [factory];

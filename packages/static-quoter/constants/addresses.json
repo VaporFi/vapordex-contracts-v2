@@ -96,5 +96,19 @@
         "factory": "0xa49d3fCf9fC70a3aa26d88EF8dEC39fBe6d881C2"
       }
     }
+  },
+  "telos": {
+    "protocols": {
+      "vapordexV2": {
+        "factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
+      }
+    }
+  },
+  "telosTestnet": {
+    "protocols": {
+      "vapordexV2": {
+        "factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
+      }
+    }
   }
 }
