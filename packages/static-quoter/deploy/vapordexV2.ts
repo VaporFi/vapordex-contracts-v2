@@ -13,18 +13,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const contractName = "UniswapV3StaticQuoter";
   let factory;
   switch (network.name) {
-    case "fuji": {
+    case "fuji":
       factory = addresses.fuji.protocols.vapordexV2.factory;
-    }
-    case "avalanche": {
+      break;
+    case "avalanche":
       factory = addresses.avalanche.protocols.vapordexV2.factory;
-    }
-    case "telosTestnet": {
+      break;
+    case "telosTestnet":
       factory = addresses.telosTestnet.protocols.vapordexV2.factory;
-    }
-    case "telos": {
+      break;
+    case "telos":
       factory = addresses.telos.protocols.vapordexV2.factory;
-    }
+      break;
   }
   const args = [factory];
   const { deployer } = await getNamedAccounts();
