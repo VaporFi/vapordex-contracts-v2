@@ -20,6 +20,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     case "avalanche":
       factory = addresses.avalanche.protocols.vapordexV2.factory;
       break;
+    case "telosTestnet":
+      factory = addresses.telosTestnet.protocols.vapordexV2.factory;
+      break;
+    case "telos":
+      factory = addresses.telos.protocols.vapordexV2.factory;
+      break;
   }
   const args = [factory];
   const { deployer } = await getNamedAccounts();
