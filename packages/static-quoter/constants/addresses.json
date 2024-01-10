@@ -101,6 +101,9 @@
     "protocols": {
       "vapordexV2": {
         "factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
+      },
+      "swapsicleV2": {
+        "factory": "0xA09BAbf9A48003ae9b9333966a8Bda94d820D0d9"
       }
     }
   },
