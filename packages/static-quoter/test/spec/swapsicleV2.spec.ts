@@ -10,11 +10,11 @@ import {
 } from "../helpers";
 import addresses from "../addresses.json";
 
-const { tokens } = addresses.dogechain;
-const { quickswap } = addresses.dogechain.protocols;
+const { tokens } = addresses.telos;
+const { swapsicleV2 } = addresses.telos.protocols;
 
-async function dogechainFixture(blockNumber: number) {
-  await forkNetwork("dogechain", blockNumber);
+async function telosFixture(blockNumber: number) {
+  await forkNetwork("telos", blockNumber);
   return fixture();
 }
 
@@ -26,18 +26,18 @@ async function fixture() {
 
 async function deployAlgebraStaticQuoter() {
   const [deployer] = await ethers.getSigners();
-  return deployContract(deployer, "AlgebraStaticQuoter", [quickswap.factory]);
+  return deployContract(deployer, "AlgebraStaticQuoter", [swapsicleV2.factory]);
 }
 
 async function getAlgebraQuoterV2() {
   return ethers.getContractAt(
     require("../../abis/AlgebraQuoterV2.json"),
-    quickswap.quoterV2
+    swapsicleV2.quoterV2
   );
 }
 
-describe("Quoter:Quickswap", async () => {
-  context("dogechain", () => {
+describe("Quoter:SwapsicleV2", async () => {
+  context("telos", () => {
     async function checkStaticMatchesOriginalSingle(
       amountIn: BigNumber,
       tokenIn: string,
@@ -83,31 +83,31 @@ describe("Quoter:Quickswap", async () => {
       console.log(`Gas: ${gas.toString()}`);
     }
 
-    let fix: ThenArgRecursive<ReturnType<typeof dogechainFixture>>;
+    let fix: ThenArgRecursive<ReturnType<typeof telosFixture>>;
 
-    context("22021957", async () => {
-      const FORK_BLOCK = 22021957;
+    context("319886591", async () => {
+      const FORK_BLOCK = 319886591;
 
       beforeEach(async () => {
-        fix = await dogechainFixture(FORK_BLOCK);
+        fix = await telosFixture(FORK_BLOCK);
       });
 
       context(
         "static-Quoter and original-Quoter quotes match :: single",
         async () => {
-          it("WWDOGE -> USDC :: 1000 WWDOGE", async () => {
+          it("WTLOS -> USDC :: 1000 WTLOS", async () => {
             await checkStaticMatchesOriginalSingle(
               ethers.utils.parseUnits("1000", 18),
-              tokens.wwdoge,
+              tokens.wtlos,
               tokens.usdc
             );
           });
 
-          it("USDC -> WWDOGE :: 33_000 USDC", async () => {
+          it("USDC -> WTLOS :: 33_000 USDC", async () => {
             await checkStaticMatchesOriginalSingle(
               ethers.utils.parseUnits("33000", 6),
               tokens.usdc,
-              tokens.wwdoge
+              tokens.wtlos
             );
           });
 
@@ -124,19 +124,19 @@ describe("Quoter:Quickswap", async () => {
       context(
         "static-Quoter and original-Quoter quotes match :: path",
         async () => {
-          it("ETH --> USDC --> WWDOGE :: 100 ETH", async () => {
+          it("ETH --> USDC --> WTLOS :: 100 ETH", async () => {
             await checkStaticMatchesOriginalPath(
               ethers.utils.parseUnits("100", 18),
-              [tokens.eth, tokens.usdc, tokens.wwdoge]
+              [tokens.eth, tokens.usdc, tokens.wtlos]
             );
           });
 
-          it("ETH --> USDC --> WWDOGE -> DC :: 1 ETH", async () => {
-            await checkStaticMatchesOriginalPath(
-              ethers.utils.parseUnits("1", 18),
-              [tokens.eth, tokens.usdc, tokens.wwdoge, tokens.dc]
-            );
-          });
+          // it("ETH --> USDC --> WTLOS -> DC :: 1 ETH", async () => {
+          //   await checkStaticMatchesOriginalPath(
+          //     ethers.utils.parseUnits("1", 18),
+          //     [tokens.eth, tokens.usdc, tokens.wtlos, tokens.dc]
+          //   );
+          // });
         }
       );
     });

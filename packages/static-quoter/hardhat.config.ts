@@ -14,6 +14,7 @@ const TELOS_RPC = process.env.TELOS_RPC ?? "";
 const DEPLOYER_ADDRESS = process.env.DEPLOYER_ADDRESS as string;
 const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY as string;
 const ETHERSCAN_API_KEY = process.env.SNOWTRACE_API_KEY;
+const DOGECHAIN_RPC = process.env.DOGECHAIN_RPC ?? "";
 
 const avalancheConfig = {
   url: AVALANCHE_RPC,
@@ -47,11 +48,20 @@ const telosConfig = {
   accounts: [] as string[],
 };
 
+const dogechainConfig = {
+  url: DOGECHAIN_RPC,
+  chainId: 2000,
+  live: true,
+  saveDeployments: true,
+  accounts: [] as string[],
+};
+
 if (DEPLOYER_PRIVATE_KEY) {
   avalancheConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   fujiConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   telosTestnetConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   telosConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
+  dogechainConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 }
 
 const config: HardhatUserConfig = {
@@ -78,6 +88,7 @@ const config: HardhatUserConfig = {
     fuji: fujiConfig,
     telosTestnet: telosTestnetConfig,
     telos: telosConfig,
+    dogechain: dogechainConfig,
   },
   namedAccounts: {
     deployer: {
