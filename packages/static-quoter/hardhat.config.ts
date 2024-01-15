@@ -81,8 +81,7 @@ const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      live: false,
-      saveDeployments: false,
+      forking: { enabled: true, url: "https://mainnet.telos.net/evm" },
     },
     avalanche: avalancheConfig,
     fuji: fujiConfig,
