@@ -21,7 +21,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await getNamedAccounts();
 
   log("1) Deploy contract");
-  const deployResult: any = await deploy(contractName, {
+  const deployResult: any = await deploy("SwapsicleV2", {
     from: deployer,
     contract: contractName,
     skipIfAlreadyDeployed: false,
@@ -38,4 +38,4 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 };
 
 export default func;
-func.tags = ["swapsicleV2"];
+func.tags = ["swapsicleV2", "telos"];
