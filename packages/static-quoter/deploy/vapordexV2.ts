@@ -6,7 +6,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, network } = hre;
   const { deploy, log } = deployments;
 
-  const allowedNetworks = ["avalanche", "fuji", "telos", "telosTestnet"];
+  const allowedNetworks = [
+    "avalanche",
+    "fuji",
+    "telos",
+    "telosTestnet",
+    "europaTestnet",
+  ];
   if (!allowedNetworks.includes(network.name))
     throw new Error(`Wrong network! Only "${allowedNetworks}" supported`);
 
@@ -26,6 +32,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     case "telos":
       factory = addresses.telos.protocols.vapordexV2.factory;
       break;
+    case "europaTestnet":
+      factory = addresses.europaTestnet.protocols.vapordexV2.factory;
+      break;
   }
   const args = [factory];
   const { deployer } = await getNamedAccounts();
@@ -40,7 +49,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   });
 
   if (deployResult.newlyDeployed)
-    log(`- 🎉 Deployed at: ${deployResult.address}`);
+    log(`- 🎉 Deployed at: ${deployResult.address} for ${network.name}`);
   else
     log(
       `- ⏩ Deployment skipped, using previous deployment at: ${deployResult.address}`
