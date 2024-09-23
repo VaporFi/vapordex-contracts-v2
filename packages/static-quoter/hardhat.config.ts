@@ -6,6 +6,7 @@ import "@nomiclabs/hardhat-etherscan";
 import "hardhat-abi-exporter";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
+import { url } from "inspector";
 
 const AVALANCHE_RPC = process.env.AVALANCHE_RPC ?? "";
 const FUJI_RPC = process.env.FUJI_RPC ?? "";
@@ -16,6 +17,7 @@ const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY as string;
 const ETHERSCAN_API_KEY = process.env.SNOWTRACE_API_KEY;
 const DOGECHAIN_RPC = process.env.DOGECHAIN_RPC ?? "";
 const EUROPA_TESTNET_RPC = process.env.EUROPA_TESTNET_RPC ?? "";
+const CURTIS_RPC = process.env.CURTIS_RPC ?? "";
 
 const avalancheConfig = {
   url: AVALANCHE_RPC,
@@ -65,6 +67,14 @@ const europaTestnetConfig = {
   accounts: [] as string[],
 };
 
+const curtisConfig = {
+  url: CURTIS_RPC,
+  chainId: 33111,
+  live: true,
+  saveDeployments: true,
+  accounts: [] as string[],
+};
+
 if (DEPLOYER_PRIVATE_KEY) {
   avalancheConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   fujiConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
@@ -72,6 +82,7 @@ if (DEPLOYER_PRIVATE_KEY) {
   telosConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   dogechainConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   europaTestnetConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
+  curtisConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 }
 
 const config: HardhatUserConfig = {
@@ -99,6 +110,7 @@ const config: HardhatUserConfig = {
     telos: telosConfig,
     dogechain: dogechainConfig,
     europaTestnet: europaTestnetConfig,
+    curtis: curtisConfig,
   },
   namedAccounts: {
     deployer: {

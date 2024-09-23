@@ -120,5 +120,12 @@
         "factory": "0x8a43B6948244df8876763adD1f307eF3F6B140c6"
       }
     }
+  },
+  "curtis": {
+    "protocols": {
+      "vapordexV2": {
+        "factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
+      }
+    }
   }
 }
