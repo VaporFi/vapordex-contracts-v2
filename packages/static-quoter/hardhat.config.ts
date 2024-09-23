@@ -6,7 +6,6 @@ import "@nomiclabs/hardhat-etherscan";
 import "hardhat-abi-exporter";
 import "hardhat-deploy";
 import "hardhat-deploy-ethers";
-import { url } from "inspector";
 
 const AVALANCHE_RPC = process.env.AVALANCHE_RPC ?? "";
 const FUJI_RPC = process.env.FUJI_RPC ?? "";
@@ -123,6 +122,7 @@ const config: HardhatUserConfig = {
       40: DEPLOYER_ADDRESS,
       41: DEPLOYER_ADDRESS,
       1444673419: DEPLOYER_ADDRESS,
+      33111: DEPLOYER_ADDRESS,
     },
   },
   abiExporter: {
