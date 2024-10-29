@@ -13,4 +13,5 @@ deploy_arbitrum	 			:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xBc0BE8F5364
 deploy_ethereum	 			:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xEfBcfe1be695549e7CFC7440F5E814937f93c42C -j https://eth.llamarpc.com -w9 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2 -ncl ETH -c 3
 deploy_telos_testnet	:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xb2a30d5D43DE954b32FacefEa17561c51b7baE9B -j https://testnet.telos.net/evm -w9 0x3E9074B7628b5E5250af57658CDEBC36Fa602f3f -ncl TLOS -c 3
 deploy_telos					:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xCf00c1ac6D26d52054ec89bE6e093F2E270D61d9 -j https://mainnet.telos.net/evm -w9 0xD102cE6A4dB07D247fcc28F366A623Df0938CA9E -ncl TLOS -c 3
-deploy_curtis_testnet 	:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xCf00c1ac6D26d52054ec89bE6e093F2E270D61d9 -j https://curtis.rpc.caldera.xyz/http -w9 0xC009a670E2B02e21E7e75AE98e254F467f7ae257 -ncl APE -c 3
+deploy_curtis_testnet	:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xCf00c1ac6D26d52054ec89bE6e093F2E270D61d9 -j https://curtis.rpc.caldera.xyz/http -w9 0xC009a670E2B02e21E7e75AE98e254F467f7ae257 -ncl APE -c 3
+deploy_apechain				:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xCf00c1ac6D26d52054ec89bE6e093F2E270D61d9 -j https://rpc.apechain.com/http -w9 0x48b62137edfa95a428d35c09e44256a739f6b557 -ncl APE -c 3
