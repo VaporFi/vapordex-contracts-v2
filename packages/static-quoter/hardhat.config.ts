@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { HardhatUserConfig } from "hardhat/config";
+import type { HardhatUserConfig } from "hardhat/config";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-etherscan";
@@ -17,6 +17,8 @@ const ETHERSCAN_API_KEY = process.env.SNOWTRACE_API_KEY;
 const DOGECHAIN_RPC = process.env.DOGECHAIN_RPC ?? "";
 const APECHAIN_RPC =
 	process.env.APECHAIN_RPC ?? "https://rpc.apechain.com/http";
+const EUROPA_TESTNET_RPC = process.env.EUROPA_TESTNET_RPC ?? "";
+const CURTIS_RPC = process.env.CURTIS_RPC ?? "";
 
 const avalancheConfig = {
 	url: AVALANCHE_RPC,
@@ -66,6 +68,22 @@ const apechainConfig = {
 	accounts: [] as string[],
 };
 
+const europaTestnetConfig = {
+	url: EUROPA_TESTNET_RPC,
+	chainId: 1444673419,
+	live: true,
+	saveDeployments: true,
+	accounts: [] as string[],
+};
+
+const curtisConfig = {
+	url: CURTIS_RPC,
+	chainId: 33111,
+	live: true,
+	saveDeployments: true,
+	accounts: [] as string[],
+};
+
 if (DEPLOYER_PRIVATE_KEY) {
 	avalancheConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 	fujiConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
@@ -73,6 +91,8 @@ if (DEPLOYER_PRIVATE_KEY) {
 	telosConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 	dogechainConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 	apechainConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
+	europaTestnetConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
+	curtisConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 }
 
 const config: HardhatUserConfig = {
@@ -112,6 +132,8 @@ const config: HardhatUserConfig = {
 			40: DEPLOYER_ADDRESS,
 			41: DEPLOYER_ADDRESS,
 			33139: DEPLOYER_ADDRESS,
+			33111: DEPLOYER_ADDRESS,
+			1444673419: DEPLOYER_ADDRESS,
 		},
 	},
 	abiExporter: {
