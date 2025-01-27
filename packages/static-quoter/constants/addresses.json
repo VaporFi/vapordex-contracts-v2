@@ -127,5 +127,12 @@
         "factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
       }
     }
+  },
+  "baseSepolia": {
+    "protocols": {
+      "vapordexV2": {
+        "factory": "0x3C88Aa61A1C15c8028530e0115884F85c839a795"
+      }
+    }
   }
 }
