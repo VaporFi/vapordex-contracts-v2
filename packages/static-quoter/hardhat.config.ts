@@ -18,6 +18,8 @@ const DOGECHAIN_RPC = process.env.DOGECHAIN_RPC ?? "";
 const EUROPA_TESTNET_RPC = process.env.EUROPA_TESTNET_RPC ?? "";
 const CURTIS_RPC = process.env.CURTIS_RPC ?? "";
 const BASE_SEPOLIA_RPC = process.env.BASE_SEPOLIA_RPC ?? "";
+const APECHAIN_RPC =
+  process.env.APECHAIN_RPC ?? "https://rpc.apechain.com/http";
 
 const avalancheConfig = {
   url: AVALANCHE_RPC,
@@ -83,6 +85,14 @@ const baseSepoliaConfig = {
   accounts: [] as string[],
 };
 
+const apechainConfig = {
+  url: APECHAIN_RPC,
+  chainId: 33139,
+  live: true,
+  saveDeployments: true,
+  accounts: [] as string[],
+};
+
 if (DEPLOYER_PRIVATE_KEY) {
   avalancheConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   fujiConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
@@ -92,6 +102,7 @@ if (DEPLOYER_PRIVATE_KEY) {
   europaTestnetConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   curtisConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
   baseSepoliaConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
+  apechainConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 }
 
 const config: HardhatUserConfig = {
@@ -121,6 +132,7 @@ const config: HardhatUserConfig = {
     europaTestnet: europaTestnetConfig,
     curtis: curtisConfig,
     baseSepolia: baseSepoliaConfig,
+    apechain: apechainConfig,
   },
   namedAccounts: {
     deployer: {
@@ -135,6 +147,7 @@ const config: HardhatUserConfig = {
       1444673419: DEPLOYER_ADDRESS,
       33111: DEPLOYER_ADDRESS,
       84532: DEPLOYER_ADDRESS,
+      33139: DEPLOYER_ADDRESS,
     },
   },
   abiExporter: {

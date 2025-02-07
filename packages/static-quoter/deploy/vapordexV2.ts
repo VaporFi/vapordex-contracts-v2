@@ -14,6 +14,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "europaTestnet",
     "curtis",
     "baseSepolia",
+    "apechain",
   ];
   if (!allowedNetworks.includes(network.name))
     throw new Error(`Wrong network! Only "${allowedNetworks}" supported`);
@@ -42,6 +43,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       break;
     case "baseSepolia":
       factory = addresses.baseSepolia.protocols.vapordexV2.factory;
+      break;
+    case "apechain":
+      factory = addresses.apechain.protocols.vapordexV2.factory;
       break;
   }
   const args = [factory];
