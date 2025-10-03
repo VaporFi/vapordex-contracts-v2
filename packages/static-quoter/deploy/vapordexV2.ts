@@ -14,6 +14,10 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 		"apechain",
 		"europaTestnet",
 		"curtis",
+		"arbitrum",
+		"bsc",
+		"polygon",
+		"base",
 	];
 	if (!allowedNetworks.includes(network.name))
 		throw new Error(`Wrong network! Only "${allowedNetworks}" supported`);
@@ -43,6 +47,9 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 		case "curtis":
 			factory = addresses.curtis.protocols.vapordexV2.factory;
 			break;
+		case "base":
+			factory = addresses.base.protocols.vapordexV2.factory;
+			break;
 	}
 	const args = [factory];
 	const { deployer } = await getNamedAccounts();
@@ -54,6 +61,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 		skipIfAlreadyDeployed: false,
 		log: true,
 		args,
+		gasLimit: 6000000,
 	});
 
 	if (deployResult.newlyDeployed)

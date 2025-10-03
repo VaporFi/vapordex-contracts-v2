@@ -3,6 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { migrate } from './migrate'
 import { MigrationState, MigrationStep, StepOutput } from './migrations'
 import { ADD_1BP_FEE_TIER } from './steps/add-1bp-fee-tier'
+// import { ADD_500BP_FEE_TIER } from './steps/add-500bp-fee-tier'
 import { DEPLOY_MULTICALL2 } from './steps/deploy-multicall2'
 import { DEPLOY_NFT_DESCRIPTOR_LIBRARY_V1_3_0 } from './steps/deploy-nft-descriptor-library-v1_3_0'
 import { DEPLOY_NFT_POSITION_DESCRIPTOR_V1_3_0 } from './steps/deploy-nft-position-descriptor-v1_3_0'
@@ -35,6 +36,7 @@ const MIGRATION_STEPS: MigrationStep[] = [
   DEPLOY_QUOTER_V2,
   DEPLOY_V3_SWAP_ROUTER_02,
   TRANSFER_PROXY_ADMIN,
+  // ADD_500BP_FEE_TIER, // Optional
 ]
 
 export default function deploy({

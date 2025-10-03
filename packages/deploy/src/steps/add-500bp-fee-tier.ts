@@ -2,10 +2,10 @@ import UniswapV3Factory from '@uniswap/v3-core/artifacts/contracts/UniswapV3Fact
 import { Contract } from '@ethersproject/contracts'
 import { MigrationStep } from '../migrations'
 
-const ONE_BP_FEE = 100
-const ONE_BP_TICK_SPACING = 1
+const FIVE_HUNDRED_BP_FEE = 50_000
+const FIVE_HUNDRED_BP_TICK_SPACING = 1_000
 
-export const ADD_1BP_FEE_TIER: MigrationStep = async (state, { signer, gasPrice }) => {
+export const ADD_500BP_FEE_TIER: MigrationStep = async (state, { signer, gasPrice }) => {
   if (state.v3CoreFactoryAddress === undefined) {
     throw new Error('Missing UniswapV3Factory')
   }
@@ -13,11 +13,11 @@ export const ADD_1BP_FEE_TIER: MigrationStep = async (state, { signer, gasPrice 
   const v3CoreFactory = new Contract(state.v3CoreFactoryAddress, UniswapV3Factory.abi, signer)
 
   // If already enabled, skip to make step idempotent
-  const existingTickSpacing = await v3CoreFactory.feeAmountTickSpacing(ONE_BP_FEE)
+  const existingTickSpacing = await v3CoreFactory.feeAmountTickSpacing(FIVE_HUNDRED_BP_FEE)
   if (existingTickSpacing.toString() !== '0') {
     return [
       {
-        message: `UniswapV3Factory fee tier ${ONE_BP_FEE / 100} bps already enabled with tick spacing ${existingTickSpacing.toString()}`,
+        message: `UniswapV3Factory fee tier ${FIVE_HUNDRED_BP_FEE / 100} bps already enabled with tick spacing ${existingTickSpacing.toString()}`,
       },
     ]
   }
@@ -26,11 +26,11 @@ export const ADD_1BP_FEE_TIER: MigrationStep = async (state, { signer, gasPrice 
   if (owner !== (await signer.getAddress())) {
     throw new Error('UniswapV3Factory.owner is not signer')
   }
-  const tx = await v3CoreFactory.enableFeeAmount(ONE_BP_FEE, ONE_BP_TICK_SPACING, { gasPrice })
+  const tx = await v3CoreFactory.enableFeeAmount(FIVE_HUNDRED_BP_FEE, FIVE_HUNDRED_BP_TICK_SPACING, { gasPrice })
 
   return [
     {
-      message: `UniswapV3Factory added a new fee tier ${ONE_BP_FEE / 100} bps with tick spacing ${ONE_BP_TICK_SPACING}`,
+      message: `UniswapV3Factory added a new fee tier ${FIVE_HUNDRED_BP_FEE / 100} bps with tick spacing ${FIVE_HUNDRED_BP_TICK_SPACING}`,
       hash: tx.hash,
     },
   ]

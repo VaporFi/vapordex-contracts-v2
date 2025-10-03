@@ -1,5 +1,6 @@
 import { Contract, ContractInterface, ContractFactory } from '@ethersproject/contracts'
-import { MigrationConfig, MigrationState, MigrationStep } from '../../migrations'
+import { BigNumber } from '@ethersproject/bignumber'
+import type { MigrationConfig, MigrationState, MigrationStep } from '../../migrations'
 import linkLibraries from '../../util/linkLibraries'
 
 type ConstructorArgs = (string | number | string[] | number[])[]
@@ -15,7 +16,11 @@ export default function createDeployContractStep({
     contractName: string
     abi: ContractInterface
     bytecode: string
-    linkReferences?: { [fileName: string]: { [contractName: string]: { length: number; start: number }[] } }
+    linkReferences?: {
+      [fileName: string]: {
+        [contractName: string]: { length: number; start: number }[]
+      }
+    }
   }
   computeLibraries?: (state: Readonly<MigrationState>, config: MigrationConfig) => { [libraryName: string]: string }
   computeArguments?: (state: Readonly<MigrationState>, config: MigrationConfig) => ConstructorArgs
@@ -40,10 +45,23 @@ export default function createDeployContractStep({
 
       let contract: Contract
       try {
-        contract = await factory.deploy(...constructorArgs, { gasPrice: config.gasPrice })
+        contract = await factory.deploy(...constructorArgs, {
+          gasPrice: config.gasPrice,
+        })
       } catch (error) {
         console.error(`Failed to deploy ${contractName}`)
-        throw error
+        // Some RPCs cap estimateGas (e.g., at 1,000,000), causing deploy to fail with UNPREDICTABLE_GAS_LIMIT.
+        // Retry with a conservative manual gas limit to bypass estimateGas.
+        try {
+          const fallbackGasLimit = BigNumber.from(7_000_000)
+          contract = await factory.deploy(...constructorArgs, {
+            gasPrice: config.gasPrice,
+            gasLimit: fallbackGasLimit,
+          })
+        } catch (fallbackError) {
+          console.error(`Fallback deploy with manual gas limit failed for ${contractName}`)
+          throw fallbackError
+        }
       }
 
       state[key] = contract.address
@@ -56,7 +74,12 @@ export default function createDeployContractStep({
         },
       ]
     } else {
-      return [{ message: `Contract ${contractName} was already deployed`, address: state[key] }]
+      return [
+        {
+          message: `Contract ${contractName} was already deployed`,
+          address: state[key],
+        },
+      ]
     }
   }
 }

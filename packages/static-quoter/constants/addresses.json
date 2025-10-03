@@ -28,6 +28,9 @@
 			"uniswapV3": {
 				"quoterV2": "0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a",
 				"factory": "0x33128a8fC17869897dcE68Ed026d694621f6FDfD"
+			},
+			"vapordexV2": {
+				"factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
 			}
 		}
 	},
@@ -54,6 +57,9 @@
 			},
 			"kyber": {
 				"factory": "0xC7a590291e07B9fe9E64b86c58fD8fC764308C4A"
+			},
+			"vapordexV2": {
+				"factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
 			}
 		}
 	},
@@ -70,6 +76,9 @@
 			"kyber": {
 				"quoterV2": "0x4d47fd5a29904Dae0Ef51b1c450C9750F15D7856",
 				"factory": "0xC7a590291e07B9fe9E64b86c58fD8fC764308C4A"
+			},
+			"vapordexV2": {
+				"factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
 			}
 		}
 	},
@@ -129,6 +138,13 @@
 		}
 	},
 	"apechain": {
+		"protocols": {
+			"vapordexV2": {
+				"factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
+			}
+		}
+	},
+	"bsc": {
 		"protocols": {
 			"vapordexV2": {
 				"factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"

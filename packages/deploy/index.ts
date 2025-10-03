@@ -3,9 +3,9 @@ import { Wallet } from '@ethersproject/wallet'
 import { JsonRpcProvider, TransactionReceipt } from '@ethersproject/providers'
 import { AddressZero } from '@ethersproject/constants'
 import { getAddress } from '@ethersproject/address'
-import fs from 'fs'
+import fs from 'node:fs'
 import deploy from './src/deploy'
-import { MigrationState } from './src/migrations'
+import type { MigrationState } from './src/migrations'
 import { asciiStringToBytes32 } from './src/util/asciiStringToBytes32'
 import { version } from './package.json'
 
@@ -40,7 +40,7 @@ try {
 
 let gasPrice: number | undefined
 try {
-  gasPrice = program.gasPrice ? parseInt(program.gasPrice) : undefined
+  gasPrice = program.gasPrice ? Number.parseInt(program.gasPrice) : undefined
 } catch (error) {
   console.error('Failed to parse gas price', (error as Error).message)
   process.exit(1)
@@ -48,7 +48,7 @@ try {
 
 let confirmations: number
 try {
-  confirmations = parseInt(program.confirmations)
+  confirmations = Number.parseInt(program.confirmations)
 } catch (error) {
   console.error('Failed to parse confirmations', (error as Error).message)
   process.exit(1)
