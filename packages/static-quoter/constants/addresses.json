@@ -150,5 +150,12 @@
 				"factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
 			}
 		}
+	},
+	"monad": {
+		"protocols": {
+			"vapordexV2": {
+				"factory": "0x62B672E531f8c11391019F6fba0b8B6143504169"
+			}
+		}
 	}
 }

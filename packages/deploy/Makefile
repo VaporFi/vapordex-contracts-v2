@@ -17,3 +17,4 @@ deploy_curtis_testnet	:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xCf00c1ac6
 deploy_europa_testnet :; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xb2a30d5D43DE954b32FacefEa17561c51b7baE9B -j https://testnet.skalenodes.com/v1/juicy-low-small-testnet -w9 0xba05e3c8033705017ea734f4041fcce7f5d43271 -ncl SKL -c 3
 deploy_apechain				:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xCf00c1ac6D26d52054ec89bE6e093F2E270D61d9 -j https://rpc.apechain.com/http -w9 0x48b62137edfa95a428d35c09e44256a739f6b557 -ncl APE -c 3
 deploy_base						:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xCf00c1ac6D26d52054ec89bE6e093F2E270D61d9 -j https://base.llamarpc.com -w9 0x4200000000000000000000000000000000000006 -ncl ETH -s ./state_base.json
+deploy_monad					:; yarn start -pk 0x$(DEPLOYER_PRIVATE_KEY) -o 0xCf00c1ac6D26d52054ec89bE6e093F2E270D61d9 -j https://rpc4.monad.xyz -w9 0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A -ncl MON -s ./state_monad.json

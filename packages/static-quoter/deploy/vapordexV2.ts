@@ -18,6 +18,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 		"bsc",
 		"polygon",
 		"base",
+		"monad",
 	];
 	if (!allowedNetworks.includes(network.name))
 		throw new Error(`Wrong network! Only "${allowedNetworks}" supported`);
@@ -49,6 +50,9 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 			break;
 		case "base":
 			factory = addresses.base.protocols.vapordexV2.factory;
+			break;
+		case "monad":
+			factory = addresses.monad.protocols.vapordexV2.factory;
 			break;
 	}
 	const args = [factory];

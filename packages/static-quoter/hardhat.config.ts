@@ -20,6 +20,7 @@ const APECHAIN_RPC =
 const EUROPA_TESTNET_RPC = process.env.EUROPA_TESTNET_RPC ?? "";
 const CURTIS_RPC = process.env.CURTIS_RPC ?? "";
 const BASE_RPC = process.env.BASE_RPC ?? "https://base.llamarpc.com";
+const MONAD_RPC = process.env.MONAD_RPC ?? "https://rpc4.monad.xyz";
 
 const avalancheConfig = {
 	url: AVALANCHE_RPC,
@@ -118,6 +119,14 @@ const baseConfig = {
 	accounts: [] as string[],
 };
 
+const monadConfig = {
+	url: MONAD_RPC,
+	chainId: 143,
+	live: true,
+	saveDeployments: true,
+	accounts: [] as string[],
+};
+
 if (DEPLOYER_PRIVATE_KEY) {
 	avalancheConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 	fujiConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
@@ -131,6 +140,7 @@ if (DEPLOYER_PRIVATE_KEY) {
 	bscConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 	polygonConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 	baseConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
+	monadConfig.accounts.push(DEPLOYER_PRIVATE_KEY);
 }
 
 const config: HardhatUserConfig = {
@@ -164,6 +174,7 @@ const config: HardhatUserConfig = {
 		bsc: bscConfig,
 		polygon: polygonConfig,
 		base: baseConfig,
+		monad: monadConfig,
 	},
 	namedAccounts: {
 		deployer: {
@@ -181,6 +192,7 @@ const config: HardhatUserConfig = {
 			56: DEPLOYER_ADDRESS,
 			137: DEPLOYER_ADDRESS,
 			8453: DEPLOYER_ADDRESS,
+			143: DEPLOYER_ADDRESS,
 		},
 	},
 	abiExporter: {
@@ -246,6 +258,14 @@ const config: HardhatUserConfig = {
 				urls: {
 					apiURL: "https://api.basescan.org/api",
 					browserURL: "https://basescan.org",
+				},
+			},
+			{
+				network: "monad",
+				chainId: 143,
+				urls: {
+					apiURL: "https://api.monadscan.io/api",
+					browserURL: "https://monadscan.io",
 				},
 			},
 		],
